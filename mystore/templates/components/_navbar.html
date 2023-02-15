@@ -1,0 +1,58 @@
+{% load heroicons static %}
+<div class="navbar bg-base-100 px-10">
+ <div class="justify-center w-full lg:justify-start navbar-start">
+  <a class="btn btn-ghost normal-case text-xl" href="/">
+   <img src='{% static "img/Logo.png" %}' alt="Home" class='w-12 lg:px-2'/> 
+   <h3 class="hidden font-semibold lg:block px-2">Zen Shop</h3>
+  </a>
+ </div>
+ <div class="hidden lg:block w-1/2 navbar-center">
+  <div class="relative">
+    <form action="{% url 'search' %}" method="get">
+    <input class="input input-bordered w-full" type="text" name="query" value="{% if request.GET.query %}{{ request.GET.query }}{% endif %}"/>
+    <div class="absolute inset-y-0 right-0 flex items-center px-2">
+      <label class="label">
+        {% heroicon_outline "magnifying-glass" size=5vw stroke_width=2 class='w-7 px-2' %}
+      </label>
+    </div>
+    </form>
+  </div>
+ </div>
+ <div class="hidden lg:flex navbar-end justify-end">
+  {% if user.is_authenticated %}
+   <div class="px-3">
+     <label tabindex="0" class="btn btn-ghost btn-circle" for='cartModal'>
+       <div class="indicator">
+         {% heroicon_outline 'shopping-cart' class='w-10' stroke_width=1 %}
+         <span class="badge badge-sm indicator-item snipcart-items-count">0</span>
+       </div>
+     </label>
+   </div>
+   {% endif %}
+   <div class="dropdown dropdown-end">
+     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+       <div class="w-10 rounded-full">
+         {% if user.is_authenticated and user.avatar %}
+          <img src="" alt="" />
+         {% else %}
+          {% heroicon_outline 'user-circle' size=10vw stroke_width=1 class='w-10' %}
+         {% endif %}
+       </div>
+     </label>
+     <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+      {% if user.is_authenticated %}
+       <li>
+        <a href="">User Setting</a>
+       </li>
+       <li>
+        <a href="{% url 'logout' %}">Logout</a>
+       </li>
+       {% else %}
+       <li>
+        <a href="{% url 'login' %}">Login/Register</a>
+       </li>
+       {% endif %}
+     </ul>
+   </div>
+ </div>
+</div>
