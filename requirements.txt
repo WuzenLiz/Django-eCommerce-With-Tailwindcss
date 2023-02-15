@@ -1,0 +1,16 @@
+pip
+wheel
+Django>=4.1,<5.0
+wagtail>=4.1,<5.0
+python-decouple>=3.1,<4
+django-livereload-server
+django-oauth-toolkit
+djangorestframework
+markdown
+django-filter
+social-auth-core
+social-auth-app-django
+heroicons
+django-import-export
+psycopg2
+django_redis

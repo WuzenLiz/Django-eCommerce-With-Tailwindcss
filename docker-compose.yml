@@ -1,0 +1,78 @@
+version: '3'
+services:
+
+  base: &base
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: wuzen_sale_app
+    platform: linux/amd64
+    env_file: .env
+
+
+  saleapp_migration:
+    <<: *base
+    image: wuzen_sale_app
+    command: ["sh", "-c", "python3 /app/manage.py makemigrations && python3 /app/manage.py migrate" ]
+    volumes:
+      - .:/app
+    env_file: .env
+    depends_on:
+      - db
+
+
+  saleapp: 
+    <<: *base
+    image: wuzen_sale_app
+    restart: always
+    #django runserver
+    ## command: ["sh", "-c", "python3 /app/manage.py runserver 0.0.0.0:8000"]
+    #gunicorn wsgi runserver
+    command: ["sh", "-c", "gunicorn saleapp.wsgi:application --bind :8000 --workers 3 --reload"]
+    volumes: 
+      - .:/app
+    ports: 
+      - 8000:8000
+    depends_on:
+      - db
+      # - redis
+    env_file: .env
+
+  saleapp_build_res:
+    <<: *base
+    image: wuzen_sale_app
+    command: ["sh", "-c", "npm isntall && npm run buildwatcher"]
+    volumes:
+      - .:/app
+    depends_on:
+      - saleapp
+
+
+  db:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - pgdb:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      # POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    env_file: .env
+
+# 
+# 
+#   redis:
+#     image: redis:7
+#     restart: always
+#     volumes:
+#       - redis:/data
+#     ports:
+#       - '6379:6379'
+
+volumes:
+  pgdb:
+  # redis:
