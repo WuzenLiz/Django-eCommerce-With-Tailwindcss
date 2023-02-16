@@ -10,14 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = Path(__file__).resolve().parent.parent
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = os.path.dirname(PROJECT_DIR)
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -35,11 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts'
-    
-    'modelcluster',
-    'taggit',
-
+    #base
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,13 +43,22 @@ INSTALLED_APPS = [
     'livereload',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.gis',
     
+    #3rd party
     'rest_framework',
     'rest_framework.authtoken',
     'social_django',
-    'oauth',
     'heroicons',
-    'import_export'
+    'import_export',
+    'modelcluster',
+    'taggit',
+    'fontawesomefree',
+    # 'cities',
+
+    #my apps
+    'accounts',
+    'saleproduct',
 ]
 
 MIDDLEWARE = [
@@ -73,7 +77,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(PROJECT_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -82,6 +86,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+                'saleproduct.context_processors.get_categories'
             ],
         },
     },
@@ -95,7 +102,7 @@ WSGI_APPLICATION = 'mystore.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': config('DATABASE_NAME',cast=str,default='saleapp'),
         'HOST': config('DATABASE_HOST',cast=str,default='localhost'),
         'PORT': config('DATABASE_PORT',cast=str,default='5432'),
@@ -147,12 +154,12 @@ STATICFILES_FINDERS = [
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static/'),
 ]
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -164,8 +171,6 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BASE_URL = config('BASE_URL', default='http://localhost:8000')
-
-WAGTAILADMIN_BASE_URL= '/admin'
 
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
@@ -195,3 +200,16 @@ CORS_TRUSTED_ORIGIN = config('TRUSTED_ORIGIN',default='',cast=str)
 USE_THOUSAND_SEPARATOR = True
 
 AUTH_USER_MODEL = 'accounts.CustomUserAccount'
+
+CITIES_DATA_DIR = os.path.join(BASE_DIR, 'cities_data')
+
+CITIES_FILES = {
+    # ...
+    'city': {
+       'filename': 'VN.zip',
+       'urls':['http://download.geonames.org/export/dump/'+'{filename}']
+    },
+    # ...
+}
+CITIES_POSTAL_CODES = ['VN']
+

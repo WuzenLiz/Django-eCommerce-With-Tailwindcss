@@ -1,0 +1,26 @@
+<!-- ./home/templates/home/product.html -->
+{% extends "base.html" %}
+{% load static humanize l10n %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <h1>{{ product.name }}</h1>
+                <p>{{ product.description }}</p>
+                <p class="price">{{ product.price|currency }}</p>
+                <form action="{% url 'add_to_cart' product.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-primary">Add to cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+{% endblock extra_js %}

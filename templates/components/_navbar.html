@@ -1,0 +1,36 @@
+{% load heroicons static %}
+<!-- navbar -->
+<nav class="bg-gray-800">
+ <div class="container flex justify-center min-w-full pr-2">
+  <div class="px-8 py-4 bg-primary flex items-center cursor-pointer relative group">
+   <span class="text-white">
+    <i class="fa-solid fa-bars"></i>
+   </span>
+   <span class="capitalize ml-2 text-white hidden lg:block">Danh Mục</span>
+
+   <!-- dropdown -->
+   <div class="absolute w-full left-0 top-full bg-white shadow-md py-3 divide-y divide-gray-300 divide-dashed opacity-0 group-hover:opacity-100 transition duration-300 invisible group-hover:visible">
+    {% for category in categories %}
+    <a href="{{ category.get_absolute_url }}" class="flex items-center px-6 py-3 hover:bg-gray-100 transition">
+     <i class='{{ category.category_icon}} w-5 h-5 object-contain'></i>
+     <span class="ml-6 text-gray-600 text-sm">{{ category.name }}</span>
+    </a>
+    {% endfor %}
+   </div>
+  </div>
+
+  <div class="flex items-center justify-end flex-grow pl-2 lg:pl-12">
+   <div class="flex items-center space-x-2 capitalize">
+   {% if user.is_authenticated %}
+    <p class="text-gray-200 hover:text-white transition">Xin chào,</p>
+    <a href="{% url 'profile' %}" class="text-gray-200 hover:text-white transition underline ml-0">{{ user.fullname|default:user.username }}</a>
+    <span class="text-gray-200">|</span> 
+    <a href="{% url 'logout' %}" class="text-gray-200 hover:text-white transition"> Logout</a>
+   {% else %}
+    <a href="{% url 'login' %}" class="text-gray-200 hover:text-white transition">Login</a>
+    <span class="text-gray-200">|</span>
+    <a href="{% url 'register' %}" class="text-gray-200 hover:text-white transition">Register</a>
+   {% endif %}
+  </div>
+ </div>
+</nav>
