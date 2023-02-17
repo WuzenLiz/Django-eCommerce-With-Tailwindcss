@@ -3433,6 +3433,9 @@ html {
 .hidden {
   display: none;
 }
+.aspect-auto {
+  aspect-ratio: auto;
+}
 .h-20 {
   height: 5rem;
 }
