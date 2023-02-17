@@ -10,14 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from decouple import config
-
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = Path(__file__).resolve().parent.parent
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = os.path.dirname(PROJECT_DIR)
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -35,11 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts'
-    
-    'modelcluster',
-    'taggit',
-
+    #base
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,18 +43,29 @@ INSTALLED_APPS = [
     'livereload',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.gis',
     
+    #3rd party
     'rest_framework',
     'rest_framework.authtoken',
     'social_django',
-    'oauth',
     'heroicons',
-    'import_export'
+    'import_export',
+    'modelcluster',
+    'taggit',
+    'fontawesomefree',
+    # 'cities',
+
+    #my apps
+    'accounts',
+    'saleproduct',
+    'carts',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -73,7 +79,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(PROJECT_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -82,6 +88,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+                'saleproduct.context_processors.get_info'
             ],
         },
     },
@@ -95,7 +104,7 @@ WSGI_APPLICATION = 'mystore.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': config('DATABASE_NAME',cast=str,default='saleapp'),
         'HOST': config('DATABASE_HOST',cast=str,default='localhost'),
         'PORT': config('DATABASE_PORT',cast=str,default='5432'),
@@ -127,6 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
+
 LANGUAGE_CODE = 'vi'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
@@ -138,6 +148,15 @@ USE_L10N = True
 USE_TZ = True
 
 
+LANGUAGES = [
+    ('vi', _('Vietnamese')),
+    ('en', _('English')),
+]
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale/'),
+)
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -147,12 +166,12 @@ STATICFILES_FINDERS = [
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static/'),
 ]
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -164,8 +183,6 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BASE_URL = config('BASE_URL', default='http://localhost:8000')
-
-WAGTAILADMIN_BASE_URL= '/admin'
 
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
@@ -195,3 +212,25 @@ CORS_TRUSTED_ORIGIN = config('TRUSTED_ORIGIN',default='',cast=str)
 USE_THOUSAND_SEPARATOR = True
 
 AUTH_USER_MODEL = 'accounts.CustomUserAccount'
+
+CITIES_DATA_DIR = os.path.join(BASE_DIR, 'cities_data')
+
+CITIES_FILES = {
+    # ...
+    'city': {
+       'filename': 'VN.zip',
+       'urls':['http://download.geonames.org/export/dump/'+'{filename}']
+    },
+    # ...
+}
+CITIES_POSTAL_CODES = ['VN']
+
+SITE_NAME = config('SITENAME',default='ZEN Store',cast=str)
+SHOP_NAME = config('SHOPNAME',default='ZEN Store',cast=str)
+SHOP_ADDRESS = config('SHOPADDRESS',default='Hà Nội',cast=str)
+SHOP_PHONE = config('SHOPPHONE',default='0123456789',cast=str)
+SHOP_EMAIL = config('SHOPEMAIL',default='',cast=str)
+SHOP_FACEBOOK = config('SHOP_FACEBOOK',default='',cast=str)
+SHOP_INSTAGRAM = config('SHOP_INSTAGRAM',default='',cast=str)
+SHOP_ZALO = config('SHOP_ZALO',default='',cast=str)
+SHOP_TIKTOK = config('SHOP_TIKTOK',default='',cast=str)

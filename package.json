@@ -1,7 +1,7 @@
 {
  "scripts": {
-  "buildwatcher": "postcss ./scr/css/main.css -o ./saleapp/static/css/tailwind-output.css --watch",
-  "build": "postcss ./scr/css/main.css -o ./saleapp/static/css/tailwind-output.css"
+  "buildwatcher": "postcss ./scr/css/main.css -o ./static/css/tailwind-output.css --watch",
+  "build": "postcss ./scr/css/main.css -o ./static/css/tailwind-output.css"
  },
  "dependencies": {
   "chokidar": "^3.5.3",

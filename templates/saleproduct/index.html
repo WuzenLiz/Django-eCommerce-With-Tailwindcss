@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load static i18n humanize %}
+{% block title %}{% endblock %}
+{% block content %}
+
+<!-- SEO banner -->
+{% if BannerContent %}
+ <a href="{{ BannerContent.link }}">
+  <div class="bg-cover bg-no-repeat bg-center py-36" style="background-image: url({{ BannerContent.image.url }});">
+   <div class="container mx-auto">
+    <h1 class="text-6xl text-gray-800 font-medium mb-4 capitalize prose">
+     {{ BannerContent.title }}
+    </h1>
+    <p>
+      {{ BannerContent.subtitle }}
+    </p>
+   </div>
+  </div>
+ </a>
+{% endif %}
+<!-- ./SEO banner -->
+
+<!-- features -->
+<div class="container mx-auto py-16">
+ <div class="w-10/12 grid grid-cols-3 gap-6 mx-auto justify-center items-center">
+  <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
+    <img src="{% static 'img/delivery-van.svg' %}" alt="Delivery" class="w-12 h-12 object-contain">
+    <div class="prose">
+     <h4 class="font-medium capitalize text-lg">Free Shipping</h4>
+     <p class="text-gray-500 text-sm">Order over $200</p>
+    </div>
+  </div>
+  <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
+    <img src="{% static 'img/money-back.svg' %}" alt="Delivery" class="w-12 h-12 object-contain">
+    <div class="prose">
+      <h4 class="font-medium capitalize text-lg">Money Returns</h4>
+      <p class="text-gray-500 text-sm">30 days money returns</p>
+    </div>
+  </div>
+  <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
+   <img src="{% static 'img/service-hours.svg' %}" alt="Delivery" class="w-12 h-12 object-contain">
+   <div class="prose">
+    <h4 class="font-medium capitalize text-lg">24/7 Support</h4>
+    <p class="text-gray-500 text-sm">Customer support</p>
+   </div>
+  </div>
+ </div>
+</div>
+<!-- ./features -->
+
+<!-- products category -->
+<div class="container py-16 mx-auto px-9 lg:px-3 ">
+ <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">
+  Theo theo danh mục
+ </h2>
+ <div class="grid grid-cols-4 gap-3 ">
+  {% for item in categories %}
+   <div class="relative rounded-sm overflow-hidden group">
+    <img src="{% if item.category_image %}{{ item.category_image.url }}{% else %}{% static 'img/default_category.png' %}{% endif %}" alt="category 1" class="w-full object-cover">
+    <a href="{{ item.get_absolute_url }}" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">
+     {{ item.name }}
+    </a>
+   </div>
+  {% endfor %}
+ </div>
+</div>
+<!-- ./products category -->
+
+<!-- features brand -->
+{% if Brands %}
+ <div class="container py-16 mx-auto px-9 lg:px-3">
+  <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">
+   Theo theo nhãn hiệu
+  </h2>
+  <div class="grid grid-cols-4 gap-3">
+   {% for item in Brands %}
+    <div class="relative rounded-sm overflow-hidden group">
+     <img src="{% if item.brand_image %}{{ item.brand_image.url }}{% else %}{% static 'img/default_brand.jpg' %}{% endif %}" alt="{{ item.name }}" class="w-full object-cover">
+     <a href="{{ item.get_absolute_url }}" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">
+      {{ item.name }}
+     </a>
+    </div>
+   {% endfor %}
+  </div>
+ </div>
+{% endif %}
+<!-- ./features brand -->
+
+<!-- new arrival -->
+<div class="container pb-16 py-16 mx-auto px-9 lg:px-3">
+ <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">
+  Sản phẩm mới
+ </h2>
+ <div class="grid grid-cols-4 gap-6">
+  {% for item in NewProducts %}
+  <div class="bg-white shadow rounded overflow-hidden group">
+   <div class="relative">
+    <img src="{{ item.main_image.url }}" alt="{{ item.name }}" class="w-full max-w-lg object-cover">
+    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
+     <a href="{{ item.get_absolute_url }}" class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition" title="Xem sản phẩm">
+      <i class="fa-solid fa-magnifying-glass"></i>
+     </a>
+     {% comment %} <a href="#" class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition" title="add to wishlist">
+       <i class="fa-solid fa-heart"></i>
+     </a> {% endcomment %}
+    </div>
+   </div>
+    <div class="pt-4 pb-3 px-4">
+      <a href="">
+      <h4 class="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition">
+       {{ item.name }}
+      </h4>
+     </a>
+     <div class="flex items-baseline mb-1 space-x-2">
+      <p class="text-xl text-primary font-semibold">{{ item.lowest_price|floatformat:0|intcomma }}VND</p>
+      {% if item.lowest_price != item.highest_price %}
+      <p class="text-xl text-primary font-semibold">{{ item.highest_price|floatformat:0|intcomma }}VND</p>
+      {% endif %}
+     </div>
+     <div class="flex items-center">
+      <div class="flex gap-1 text-sm text-yellow-400">
+        <span><i class="fa-solid fa-star"></i></span>
+        <span><i class="fa-solid fa-star"></i></span>
+        <span><i class="fa-solid fa-star"></i></span>
+        <span><i class="fa-solid fa-star"></i></span>
+        <span><i class="fa-solid fa-star"></i></span>
+      </div>
+      <div class="text-xs text-gray-500 ml-3">
+       (150)
+      </div>
+     </div>
+    </div>
+    <a href="{% url 'add_cart' %}" class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">
+     Thêm vào giỏ hàng
+    </a>
+  </div>
+  {% endfor %}
+ </div>
+ <div class="flex w-full justify-center pt-4">
+  <a href="{% url 'shop' %}" class="block w-1/4 py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">
+   Xem tất cả
+  </a>
+ </div>
+</div>
+<!-- ./new arrival -->
+
+<!-- best seller -->
+{% if bestSeller %}
+ <div class="container pb-16 py-16 mx-auto px-9 lg:px-3">
+  <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">
+   Sản phẩm bán chạy
+  </h2>
+  <div class="grid grid-cols-4 gap-6">
+   {% for item in bestSeller %}
+   <div class="bg-white shadow rounded overflow-hidden group">
+    <div class="relative">
+     <img src="{{ item.main_image.url }}" alt="{{ item.name }}" class="w-full">
+     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
+      <a href="{{ item.product.get_absolute_url }}" class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition" title="Xem sản phẩm">
+       <i class="fa-solid fa-magnifying-glass"></i>
+      </a>
+      {% comment %} <a href="#" class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition" title="add to wishlist">
+        <i class="fa-solid fa-heart"></i>
+      </a> {% endcomment %}
+     </div>
+    </div>
+     <div class="pt-4 pb-3 px-4">
+       <a href="">
+       <h4 class="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition">
+        {{ item.name }}
+       </h4>
+      </a>
+      <div class="flex items-baseline mb-1 space-x-2">
+       <p class="text-xl text-primary font-semibold">{{ item.lowest_price|floatformat:0|intcomma }}VND</p>
+       {% if item.lowest_price != item.highest_price %}
+       <p class="text-xl text-primary font-semibold">{{ item.highest_price|floatformat:0|intcomma }}VND</p>
+       {% endif %}
+      </div>
+      <div class="flex items-center">
+       <div class="flex gap-1 text-sm text-yellow-400">
+         <span><i class="fa-solid fa-star"></i></span>
+         <span><i class="fa-solid fa-star"></i></span>
+         <span><i class="fa-solid fa-star"></i></span>
+         <span><i class="fa-solid fa-star"></i></span>
+         <span><i class="fa-solid fa-star"></i></span>
+       </div>
+       <div class="text-xs text-gray-500 ml-3">
+        (150)
+       </div>
+      </div>
+     </div>
+     <a href="{% url 'add_cart' %}" class="block py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">
+      Thêm vào giỏ hàng
+     </a>
+   </div>
+   {% endfor %}
+  </div>
+</div>
+{% endif %}
+<!-- ./best seller -->
+
+{% endblock content %}

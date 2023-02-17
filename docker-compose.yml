@@ -8,7 +8,10 @@ services:
     image: wuzen_sale_app
     platform: linux/amd64
     env_file: .env
-
+    volumes:
+      - .:/app
+      - pip38:/usr/local/lib/python3.8/site-packages
+    command: ["sh", "-c", "pip install -r requirements.txt"]
 
   saleapp_migration:
     <<: *base
@@ -16,32 +19,39 @@ services:
     command: ["sh", "-c", "python3 /app/manage.py makemigrations && python3 /app/manage.py migrate" ]
     volumes:
       - .:/app
+      - pip38:/usr/local/lib/python3.8/site-packages
     env_file: .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 
   saleapp: 
     <<: *base
     image: wuzen_sale_app
-    restart: always
+    restart: on-failure
     #django runserver
-    ## command: ["sh", "-c", "python3 /app/manage.py runserver 0.0.0.0:8000"]
+    command: ["sh", "-c", "python3 /app/manage.py runserver 0.0.0.0:8000"]
     #gunicorn wsgi runserver
-    command: ["sh", "-c", "gunicorn saleapp.wsgi:application --bind :8000 --workers 3 --reload"]
+    # command: ["sh", "-c", "gunicorn mystore.wsgi:application --bind :8000 --workers 3 --reload"]
     volumes: 
       - .:/app
+      - pip38:/usr/local/lib/python3.8/site-packages
     ports: 
       - 8000:8000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      saleapp_migration:
+        condition: service_completed_successfully
+
       # - redis
     env_file: .env
 
   saleapp_build_res:
     <<: *base
     image: wuzen_sale_app
-    command: ["sh", "-c", "npm isntall && npm run buildwatcher"]
+    command: ["sh", "-c", "npm isntall && npm run build"]
     volumes:
       - .:/app
     depends_on:
@@ -49,7 +59,7 @@ services:
 
 
   db:
-    image: postgres:latest
+    image: postgis/postgis
     restart: always
     volumes:
       - pgdb:/var/lib/postgresql/data
@@ -62,17 +72,14 @@ services:
       # POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
     env_file: .env
-
-# 
-# 
-#   redis:
-#     image: redis:7
-#     restart: always
-#     volumes:
-#       - redis:/data
-#     ports:
-#       - '6379:6379'
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", 'Wuzenliz', "-d", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdb:
+  app:
+  pip38:
   # redis:

@@ -23,10 +23,17 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
     zlib1g-dev \
     libwebp-dev \
     curl \
+    binutils \
+    libproj-dev \
+    gdal-bin \
+    postgis \
+    gettext \
+    gettext-base \
+    && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-# Install the application server.
-RUN pip install "gunicorn==20.0.4"
+# # Install the application server.
+# RUN pip install "gunicorn==20.0.4"
 
 # Install nodejs
 ## get nodejs version manager (nvm)
@@ -65,6 +72,5 @@ WORKDIR /app
 
 # Copy the source code of the project into the container.
 COPY . .
-
 
 

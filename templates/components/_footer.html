@@ -1,0 +1,25 @@
+{% load heroicons static %}
+<footer class="footer footer-center w-full p-10 bg-primary text-primary-content">
+ <div>
+   <a href="/" class="logo"
+   style="background: url('{% static 'img/Logo.svg' %}') no-repeat top left;background-size:4em 4em;">
+   </a>
+   <p class="font-bold text-6xl">
+      {{ store_name }}<br/>
+   </p> 
+   <p class="font-bold">Registed © 2023</p>
+ </div> 
+ <div>
+   <div class="grid grid-flow-col gap-4">
+    <a href='{{ shopfacebook }}'>
+      <i class="fa-brands fa-facebook w-7"></i>
+    </a> 
+    <a href='{{ shoptiktok }}'>
+      <i class="fa-brands fa-tiktok w-7"></i>
+    </a> 
+    <a href='{{ shopinstagram }}'>
+      <i class="fa-brands fa-square-instagram w-7"></i>
+    </a>
+   </div>
+ </div>
+</footer>
