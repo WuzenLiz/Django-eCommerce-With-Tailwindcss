@@ -12,7 +12,8 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}"/>
         <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}"/>
         <title>
-            {% block title %}Shop{% endblock title %}
+            {{ sitename }}
+            {% block title %}{% endblock title %}
             {% block title_suffix %}{% endblock title_suffix %}
         </title>
         <meta name="description" content="" />

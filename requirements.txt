@@ -223,6 +223,7 @@ Pillow==8.4.0
     #   social-auth-core
     #   tablib
 fontawesomefree==6.3.0
+python-gettext==4.1
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

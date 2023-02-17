@@ -21,7 +21,7 @@ def index(request):
  Brands = Brand.objects.filter(is_active=True,is_featured=True).order_by('?')[:6]
  # get 4 new products lowest price variant
  NewProducts = Product.objects.filter(is_active=True).order_by('-created_at')[:4]
- BestSellerProducts = Product.objects.filter(is_active=True,is_bestseller=True).order_by('?')[:4]
+ BestSellerProducts = Product.objects.filter(is_active=True).order_by('?')[:4]
  context = {
   'BannerContent': BannerContent,
   'Brands': Brands,
@@ -52,13 +52,20 @@ def product_detail(request, slug):
  }
  return render(request, 'saleproduct/product.html', context)
 
-def category(request, slug):
+def category(request, slug, sub_slug=None):
  """Category detail page."""
  category = Category.objects.get(slug=slug)
- context = {
-  'category': category,
- }
- return render(request, 'saleproduct/category.html', context)
+ if sub_slug:
+  sub_category = SubCategory.objects.get(slug=sub_slug)
+  context = {
+   'category': category,
+   'sub_category': sub_category,
+  }
+ else:
+  context = {
+   'category': category,
+  }
+ return render(request, 'saleproduct/shop.html', context)
 
 def brand(request, slug):
  """Brand detail page."""
@@ -66,5 +73,12 @@ def brand(request, slug):
  context = {
   'category': brand,
  }
- return render(request, 'saleproduct/category.html', context)
+ return render(request, 'saleproduct/shop.html', context)
+
+def shop(request):
+ """Shop page."""
+ context = {
+  'Products': Product.objects.filter(is_active=True),
+ }
+ return render(request, 'saleproduct/shop.html', context)
 # API views

@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from decouple import config
-
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,11 +59,13 @@ INSTALLED_APPS = [
     #my apps
     'accounts',
     'saleproduct',
+    'carts',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -88,7 +90,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
-                'saleproduct.context_processors.get_categories'
+                'saleproduct.context_processors.get_info'
             ],
         },
     },
@@ -134,6 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
+
 LANGUAGE_CODE = 'vi'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
@@ -144,6 +147,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+LANGUAGES = [
+    ('vi', _('Vietnamese')),
+    ('en', _('English')),
+]
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale/'),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -213,3 +225,12 @@ CITIES_FILES = {
 }
 CITIES_POSTAL_CODES = ['VN']
 
+SITE_NAME = config('SITENAME',default='ZEN Store',cast=str)
+SHOP_NAME = config('SHOPNAME',default='ZEN Store',cast=str)
+SHOP_ADDRESS = config('SHOPADDRESS',default='Hà Nội',cast=str)
+SHOP_PHONE = config('SHOPPHONE',default='0123456789',cast=str)
+SHOP_EMAIL = config('SHOPEMAIL',default='',cast=str)
+SHOP_FACEBOOK = config('SHOP_FACEBOOK',default='',cast=str)
+SHOP_INSTAGRAM = config('SHOP_INSTAGRAM',default='',cast=str)
+SHOP_ZALO = config('SHOP_ZALO',default='',cast=str)
+SHOP_TIKTOK = config('SHOP_TIKTOK',default='',cast=str)

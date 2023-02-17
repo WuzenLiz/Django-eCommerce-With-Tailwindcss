@@ -27,6 +27,9 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
     libproj-dev \
     gdal-bin \
     postgis \
+    gettext \
+    gettext-base \
+    && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
 # # Install the application server.
