@@ -218,7 +218,7 @@ class ProductVariants(models.Model):
         related_name="variants",
     )
     name = models.CharField(max_length=50)
-    sku = models.CharField(max_length=50)
+    sku = models.CharField(max_length=50,unique=True)
     price = models.DecimalField(max_digits=9, decimal_places=2)
     saleoff = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
@@ -244,17 +244,15 @@ class ProductVariants(models.Model):
     def sale_price(self):
         return self.price - (self.price * self.saleoff / 100)
 
-    def create_variant(self, product, name, sku, price, saleoff, quantity):
-        variant = self.model(
-            product=product,
-            name=name,
-            sku=sku,
-            price=price,
-            saleoff=saleoff,
-            quantity=quantity,
-        )
-        variant.save(using=self._db)
-        return variant
+    def save(self):
+        if self.is_main:
+            self.product.variants.exclude(id=self.id).update(is_main=False)
+        if self.sku in self.product.variants.exclude(id=self.id).values_list(
+            "sku", flat=True
+        ):
+            #update 
+            self.sku = self.sku + str(self.id)
+        super(ProductVariants, self).save()
 
 class ProductImage(models.Model):
     # many image for one product

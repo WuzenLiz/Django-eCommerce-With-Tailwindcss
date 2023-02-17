@@ -32,13 +32,19 @@
      alt="{{ product.name }}-i-{{ image.id }}"
      class="object-cover h-16 w-full cursor-pointer border border-primary" />
     {% endfor %}
-   <!-- ./foreach -->
-   {% endif %}
+    <!-- ./foreach -->
+    {% endif %}
+   </div>
   </div>
- </div>
-
+  
   <div>
-   <h2 class="text-3xl font-medium uppercase mb-2">{{ product.name }}</h2>
+   <h2 class="text-5xl font-bold uppercase mb-2">{{ product.name }}</h2>
+   <div class="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
+    <p class="text-5xl text-primary font-semibold">{{ mainvariant.price|currency }}</p>
+    {% if mainvariant.saleoff %}
+    <p class="text-base text-gray-400 line-through">{{ mainvariant.sale_price|currency }}</p>
+    {% endif %}
+   </div>
    <div class="flex items-center mb-4">
     <div class="flex gap-1 text-sm text-yellow-400">
      <span><i class="fa-solid fa-star"></i></span>
@@ -47,126 +53,73 @@
      <span><i class="fa-solid fa-star"></i></span>
      <span><i class="fa-solid fa-star"></i></span>
     </div>
-    <div class="text-xs text-gray-500 ml-3">(0 Reviews)</div>
+    <div class="text-xs text-gray-500 ml-3 font-bold">(0 Reviews)</div>
    </div>
    <div class="space-y-2">
+    <p class="space-x-2">
+     <span class="text-gray-800 font-semibold">SKU: </span>
+     <span class="text-gray-600 font-semibold">{{ mainvariant.sku }}</span>
+    </p>
     <p class="text-gray-800 font-semibold space-x-2">
-     <span>Availability: </span>
+     <span>Tình trạng: </span>
      {% if product.is_out_of_stock %}
-     <span class="text-danger">In Stock</span>
+     <span class="text-danger text-lg font-semibold">Đã hết hàng</span>
      {% else %}
-     <span class="text-green-600">In Stock</span>
+     <span class="text-green-600 text-lg font-semibold">Còn hàng</span>
      {% endif %}
     </p>
     <p class="space-x-2">
-     <span class="text-gray-800 font-semibold">Brand: </span>
-     <span class="text-gray-600">{{ product.brand }}</span>
+     <span class="text-gray-800 font-semibold">Nhãn hiệu: </span>
+     <span class="text-gray-600 font-semibold">{{ product.brand }}</span>
     </p>
     <p class="space-x-2">
-     <span class="text-gray-800 font-semibold">Category: </span>
-     <span class="text-gray-600">{{ product.category }}</span>
+     <span class="text-gray-800 font-semibold">Loại sản phẩm: </span>
+     <span class="text-gray-600 font-semibold">{{ product.category }}</span>
     </p>
-    <p class="space-x-2">
-     <span class="text-gray-800 font-semibold">SKU: </span>
-     <span class="text-gray-600">{{ mainvariant.sku }}</span>
-    </p>
-   </div>
-   <div class="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
-    <p class="text-xl text-primary font-semibold">{{ mainvariant.price|currency }}</p>
-    {% if mainvariant.saleoff %}
-    <p class="text-base text-gray-400 line-through">{{ mainvariant.sale_price|currency }}</p>
-    {% endif %}
-   </div>
-
-   <p class="mt-4 text-gray-600">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos eius eum
-    reprehenderit dolore vel mollitia optio consequatur hic asperiores inventore
-    suscipit, velit consequuntur, voluptate doloremque iure necessitatibus
-    adipisci magnam porro.
-   </p>
-
-   <div class="pt-4">
-    <h3 class="text-sm text-gray-800 uppercase mb-1">Size</h3>
-    <div class="flex items-center gap-2">
-     <div class="size-selector">
-      <input type="radio" name="size" id="size-xs" class="hidden" />
-      <label
-       for="size-xs"
-       class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600"
-       >XS</label
-      >
-     </div>
-     <div class="size-selector">
-      <input type="radio" name="size" id="size-sm" class="hidden" />
-      <label
-       for="size-sm"
-       class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600"
-       >S</label
-      >
-     </div>
-     <div class="size-selector">
-      <input type="radio" name="size" id="size-m" class="hidden" />
-      <label
-       for="size-m"
-       class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600"
-       >M</label
-      >
-     </div>
-     <div class="size-selector">
-      <input type="radio" name="size" id="size-l" class="hidden" />
-      <label
-       for="size-l"
-       class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600"
-       >L</label
-      >
-     </div>
-     <div class="size-selector">
-      <input type="radio" name="size" id="size-xl" class="hidden" />
-      <label
-       for="size-xl"
-       class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600"
-       >XL</label
-      >
-     </div>
-    </div>
    </div>
 
    <div class="pt-4">
-    <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Color</h3>
+    <h3 class="text-base text-gray-800 uppercase mb-1 font-semibold">Loại:</h3>
     <div class="flex items-center gap-2">
-     <div class="color-selector">
-      <input type="radio" name="color" id="red" class="hidden" />
-      <label
-       for="red"
-       class="border border-gray-200 rounded-sm h-6 w-6 cursor-pointer shadow-sm block"
-       style="background-color: #fc3d57"></label>
+    {% for item in product.variants.all %}
+     <div class="variant-selector">
+       <input 
+         type="radio" 
+         name="{{ item.sku }}" 
+         id="{{ item.sku }}" 
+         class="hidden" 
+         {% if item.is_main %}checked{% endif %}
+         data-price='{{ item.price }}'
+         data-saleoff='{{ item.saleoff }}'
+         data-sku='{{ item.sku }}'
+         data-quantity='{{ item.quantity }}'/>
+       <label
+         for="{{ item.sku }}"
+         class="text-sm 
+         font-medium border
+         border-gray-200 
+         rounded-sm h-10 
+         w-10 flex 
+         items-center justify-center 
+         cursor-pointer shadow-sm text-gray-600
+         select-none
+         ">
+         {{ item.name }}
+       </label>
      </div>
-     <div class="color-selector">
-      <input type="radio" name="color" id="black" class="hidden" />
-      <label
-       for="black"
-       class="border border-gray-200 rounded-sm h-6 w-6 cursor-pointer shadow-sm block"
-       style="background-color: #000"></label>
-     </div>
-     <div class="color-selector">
-      <input type="radio" name="color" id="white" class="hidden" />
-      <label
-       for="white"
-       class="border border-gray-200 rounded-sm h-6 w-6 cursor-pointer shadow-sm block"
-       style="background-color: #fff"></label>
-     </div>
-    </div>
+    {% endfor %}
+    </div> 
    </div>
 
    <div class="mt-4">
-    <h3 class="text-sm text-gray-800 uppercase mb-1">Quantity</h3>
+    <h3 class="text-base font-semibold text-gray-800 uppercase mb-1">Số lượng</h3>
     <div
      class="flex border border-gray-300 text-gray-600 divide-x divide-gray-300 w-max">
      <div
       class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">
       -
      </div>
-     <div class="h-8 w-8 text-base flex items-center justify-center">4</div>
+     <div class="h-8 w-8 text-base flex items-center justify-center">0</div>
      <div
       class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">
       +
@@ -174,35 +127,22 @@
     </div>
    </div>
 
-   <div class="mt-6 flex gap-3 border-b border-gray-200 pb-5 pt-5">
-    <a
-     href="#"
-     class="bg-primary border border-primary text-white px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:bg-transparent hover:text-primary transition">
-     <i class="fa-solid fa-bag-shopping"></i> Add to cart
-    </a>
-    <a
+   <div class="mt-6 flex gap-3 border-gray-200 pb-5 pt-5">
+    <form action="{% url 'add_cart' %}" method="post">
+     {% csrf_token %}
+     <input type="hidden" name="cart_product_id" value="">
+     <input type="hidden" name="cart_variant_id" value="">
+     <input type="hidden" name="cart_quantity" value="">
+     <button
+      class="bg-primary border border-primary text-white px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:bg-transparent hover:text-primary transition">
+      <i class="fa-solid fa-bag-shopping"></i> Add to cart
+     </button>
+    {% comment %} <a
      href="#"
      class="border border-gray-300 text-gray-600 px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:text-primary transition">
      <i class="fa-solid fa-heart"></i> Wishlist
-    </a>
-   </div>
-
-   <div class="flex gap-3 mt-4">
-    <a
-     href="#"
-     class="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
-     <i class="fa-brands fa-facebook-f"></i>
-    </a>
-    <a
-     href="#"
-     class="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
-     <i class="fa-brands fa-twitter"></i>
-    </a>
-    <a
-     href="#"
-     class="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
-     <i class="fa-brands fa-instagram"></i>
-    </a>
+    </a> {% endcomment %}
+    </form>
    </div>
   </div>
  </div>
@@ -211,21 +151,14 @@
 
 <!-- description -->
 <div class="container pb-16 mx-auto">
- <h3 class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium">Product details</h3>
+ <h3 class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-Bold text-3xl">Thông tin sản phẩm</h3>
  <div class="w-3/5 pt-6">
-  <div class="text-gray-600 prose">
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur necessitatibus deleniti natus
-        dolore cum maiores suscipit optio itaque voluptatibus veritatis tempora iste facilis non aut
-        sapiente dolor quisquam, ex ab.</p>
-   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, quae accusantium voluptatem
-       blanditiis sapiente voluptatum. Autem ab, dolorum assumenda earum veniam eius illo fugiat possimus
-       illum dolor totam, ducimus excepturi.</p>
-   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error quia modi ut expedita! Iure molestiae
-       labore cumque nobis quasi fuga, quibusdam rem? Temporibus consectetur corrupti rerum veritatis
-       numquam labore amet.</p>
+  <div class="text-gray-600">
+   {{ product.description }}
   </div>
   
-  {% if  product.attributes %}
+  {% if product.attributes.all %}
+  <h4 class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-Bold text-3xl mt-8">Thông số kỹ thuật</h4>
   <table class="table-auto border-collapse w-full text-left text-gray-600 text-sm mt-6">
    {% for attr in product.attributes.all %}
    <tr>

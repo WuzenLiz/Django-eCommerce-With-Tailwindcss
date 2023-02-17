@@ -3415,6 +3415,9 @@ html {
 .mb-1 {
   margin-bottom: 0.25rem;
 }
+.mt-8 {
+  margin-top: 2rem;
+}
 .block {
   display: block;
 }
@@ -3445,8 +3448,8 @@ html {
 .h-16 {
   height: 4rem;
 }
-.h-6 {
-  height: 1.5rem;
+.h-10 {
+  height: 2.5rem;
 }
 .h-9 {
   height: 2.25rem;
@@ -3484,8 +3487,8 @@ html {
 .w-1\/4 {
   width: 25%;
 }
-.w-6 {
-  width: 1.5rem;
+.w-10 {
+  width: 2.5rem;
 }
 .w-max {
   width: -moz-max-content;
@@ -3502,9 +3505,6 @@ html {
 }
 .w-44 {
   width: 11rem;
-}
-.w-10 {
-  width: 2.5rem;
 }
 .min-w-full {
   min-width: 100%;
@@ -3999,10 +3999,6 @@ html {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-.hover\:text-gray-500:hover {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 .focus\:border-primary:focus {
   --tw-border-opacity: 1;

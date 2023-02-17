@@ -1,5 +1,5 @@
 from django.db import models
-from saleproduct.models import Product
+from saleproduct.models import Product, ProductVariants
 from accounts.models import CustomUserAccount as Account
 
 # Create your models here.
@@ -16,7 +16,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
  user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
- product = models.ForeignKey(Product, on_delete=models.CASCADE)
+ product = models.ForeignKey(ProductVariants, on_delete=models.CASCADE, null=True)
  cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
  quantity = models.IntegerField()
  is_active = models.BooleanField(default=True)

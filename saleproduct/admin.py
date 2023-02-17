@@ -18,6 +18,12 @@ class ProductVariantsFormset(forms.BaseInlineFormSet):
     return False
   return result
 
+ def save(self, commit=True):
+  result = super(ProductVariantsFormset, self).save(commit=False)
+  for form in self.forms:
+   if commit:
+    form.save()
+  return result
  def clean(self):
   super(ProductVariantsFormset, self).clean()
   if any(self.errors):
@@ -27,7 +33,6 @@ class ProductVariantsFormset(forms.BaseInlineFormSet):
    if form.cleaned_data.get('is_main'):
     is_main = True
     break
-   # if there is no main variant, raise an error
   if not is_main:
    raise forms.ValidationError(_('At least one variant must be marked as main'))
   
@@ -61,6 +66,16 @@ class ProductAdmin(admin.ModelAdmin):
  list_filter = ['is_active', 'brand']
  list_editable = ['is_active']
  inlines = [ProductVariantsAdmin, ProductImageAdmin, ProductAttributeAdmin]
+ 
+ def save_formset(self, request, form, formset, change):
+  if formset.model == ProductVariants:
+   instances = formset.save(commit=False)
+   for instance in instances:
+    instance.product = form.instance
+    instance.save()
+  else:
+   formset.save()
+
  # fields = ['name', 'slug', 'brand', 'description', 'categories', 'variants', 'images', 'is_active', 'meta_keywords', 'meta_description']
 
 admin.site.register(Product, ProductAdmin)
