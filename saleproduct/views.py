@@ -26,6 +26,7 @@ def index(request):
   'BannerContent': BannerContent,
   'Brands': Brands,
   'NewProducts': NewProducts,
+  'BestSellerProducts': BestSellerProducts,
  }
  return render(request, 'saleproduct/index.html', context)
 
@@ -52,26 +53,17 @@ def product_detail(request, slug):
  }
  return render(request, 'saleproduct/product.html', context)
 
-def category(request, slug, sub_slug=None):
+def category(request, slug,):
  """Category detail page."""
- category = Category.objects.get(slug=slug)
- if sub_slug:
-  sub_category = SubCategory.objects.get(slug=sub_slug)
-  context = {
-   'category': category,
-   'sub_category': sub_category,
-  }
- else:
-  context = {
-   'category': category,
-  }
+ context = {
+  'Products': Product.objects.filter(category__slug=slug),
+ }
  return render(request, 'saleproduct/shop.html', context)
 
 def brand(request, slug):
  """Brand detail page."""
- brand = Brand.objects.get(slug=slug)
  context = {
-  'category': brand,
+  'Products': Product.objects.filter(brand__slug=slug),
  }
  return render(request, 'saleproduct/shop.html', context)
 

@@ -224,6 +224,7 @@ Pillow==8.4.0
     #   tablib
 fontawesomefree==6.3.0
 python-gettext==4.1
+django-ckeditor==
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

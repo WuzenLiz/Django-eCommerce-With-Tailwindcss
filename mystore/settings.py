@@ -28,9 +28,9 @@ SECRET_KEY = config('SECRET_KEY',cast=str, default='CHANGEME!!!')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG',cast=str,default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['90da-118-70-177-23.ap.ngrok.io','localhost:8000']
 
-
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000','http://127.0.0.1:8000','https://90da-118-70-177-23.ap.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
