@@ -11,7 +11,7 @@ services:
     volumes:
       - .:/app
       - pip38:/usr/local/lib/python3.8/site-packages
-    command: ["sh", "-c", "pip install -r requirements.txt"]
+    command: ["sh", "-c", "npm isntall && pip install -r requirements.txt"]
 
   saleapp_migration:
     <<: *base
@@ -44,18 +44,14 @@ services:
         condition: service_healthy
       saleapp_migration:
         condition: service_completed_successfully
-
-      # - redis
     env_file: .env
 
   saleapp_build_res:
     <<: *base
     image: wuzen_sale_app
-    command: ["sh", "-c", "npm isntall && npm run build"]
+    command: ["sh", "-c", "npm run build"]
     volumes:
       - .:/app
-    depends_on:
-      - saleapp
 
 
   db:

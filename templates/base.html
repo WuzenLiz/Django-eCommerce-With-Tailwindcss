@@ -30,13 +30,24 @@
     </head>
 
     <body>
+
+        <!-- Nav - header -->
         {% include 'components/_header.html' %}
         {% include 'components/_navbar.html' %}
+        <!-- End Nav - header -->
 
+        <!--breadcrumb -->
+        {% block breadcrumb  %}{% endblock breadcrumb  %}
+        <!-- End breadcrumb -->
+
+        <!-- Content -->
         {% block content %}
         {% endblock content %}
+        <!-- End Content -->
 
+        <!-- Footer -->
         {% include "components/_footer.html" %}
+        <!-- End Footer -->
 
         {# Global javascript #}
         {% include "corejs.html" %}

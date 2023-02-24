@@ -4,12 +4,12 @@
  <div class="container flex justify-center min-w-full pr-2">
   <div class="px-8 py-4 bg-primary flex items-center cursor-pointer relative group">
    <span class="text-white">
-    <i class="fa-solid fa-bars"></i>
+    <i class="fa-solid fa-bars "></i>
    </span>
    <span class="capitalize ml-2 text-white hidden lg:block">Danh Mục</span>
 
    <!-- dropdown -->
-   <div class="absolute w-full left-0 top-full bg-white shadow-md py-3 divide-y divide-gray-300 divide-dashed opacity-0 group-hover:opacity-100 transition duration-300 invisible group-hover:visible">
+   <div class="absolute w-full left-0 top-full bg-white shadow-md py-3 divide-y divide-gray-300 divide-dashed opacity-0 group-hover:opacity-100 transition duration-300 invisible group-hover:visible lg:group-hover:w-fit">
     {% for category in categories %}
     <a href="{{ category.get_absolute_url }}" class="flex items-center px-6 py-3 hover:bg-gray-100 transition">
      <i class='{{ category.category_icon}} w-5 h-5 object-contain'></i>

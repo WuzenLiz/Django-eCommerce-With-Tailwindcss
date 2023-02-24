@@ -225,7 +225,8 @@ Pillow==8.4.0
 fontawesomefree==6.3.0
 python-gettext==4.1
 django-ckeditor
-
+django-debug-toolbar
+django-hitcount
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools

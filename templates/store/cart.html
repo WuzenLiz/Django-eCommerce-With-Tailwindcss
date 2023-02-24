@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+<!---->
+{% load static i18n %}
+<!---->
+{% block title_suffix %}Giỏ hàng{% endblock title_suffix %}
+{% block breadcrumb  %}
+<div class="py-5 pl-10 breadcrumbs z-0">
+ <ul>
+  <li>
+    <a href="{% url 'index' %}" class="text-primary text-base hover:text-lg">
+     <i class="fa-solid fa-house"></i>
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'cart' %}" class="text-primary text-base">
+     <i class="fa-solid fa-shopping-cart"> </i>
+     <p class="text-base font-semibold hover:text-lg">Giỏ hàng</p>
+    </a>
+  </li>
+ </ul>
+</div>
+{% endblock breadcrumb  %}
+

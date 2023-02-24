@@ -26,6 +26,7 @@ urlpatterns = [
     path('cart/', include('carts.urls')),
     
     path('social-auth/', include('social_django.urls', namespace='social')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

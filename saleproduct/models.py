@@ -47,12 +47,14 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     category_image = models.ImageField(upload_to="res/image/categories", blank=True)
-    category_icon = models.TextField(
+    category_icon = models.CharField(
         _("Category Icon"),
         blank=True,
+        # placeholder="fa fa-home",
         help_text=_(
             "Category Icon (Font Awesome) - Example: fa fa-home find more at https://fontawesome.com/icons/"
         ),
+        max_length=255,
     )
 
     @property

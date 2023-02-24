@@ -97,6 +97,7 @@ def remove_cart_item(request, product_id, cart_item_id):
  except Exception:
   pass
  return redirect('cart')
+ 
 
 def checkout(request, total=0, quantity=0, cart_items=None):
  try:
@@ -144,7 +145,7 @@ def order_create(request, total=0, quantity=0, cart_items=None):
  else:
   return redirect('login')
 
-## here to define VNpay payment
+## here to define MOMO Payment
 def payment(request): 
     if request.method == 'POST':
         order_id = request.POST['order_id']
@@ -152,20 +153,24 @@ def payment(request):
         order = Order.objects.get(id=order_id)
         order.payment = amount
         order.save()
-        url = 'http://sandbox.vnpayment.vn/paymentv2/vpcpay.html'
-        data = {
-            'vnp_Version': '2.0.0',
-            'vnp_Command': 'pay',
-            'vnp_TmnCode': 'ZK8PZ7O5',
-            'vnp_Locale': 'vn',
-            'vnp_CurrCode': 'VND',
-            'vnp_TxnRef': str(order_id),
-            'vnp_OrderInfo': 'Thanh toan don hang',
-            'vnp_OrderType': 'billpayment',
-            'vnp_Amount': int(amount)*100,
-            'vnp_ReturnUrl': 'http://localhost:8000/payment/return',
-            'vnp_IpAddr': get_client_ip(request),
+        url = 'https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay'
+        headers = {
+            'X-Reference-Id': str(uuid.uuid4()),
+            'Ocp-Apim-Subscription-Key': '1b3f6c9d1d664a8a9a6f0c6a7d6f8f8e',
+            'Content-Type': 'application/json',
+            'X-Target-Environment': 'sandbox',
         }
-        data['vnp_SecureHash'] = vnpay.create_secure_hash(data)
-        return redirect(url, data)
-    return render(request, 'store/payment.html')
+        data = {
+            'amount': amount,
+            'currency': 'EUR',
+            'externalId': order_id,
+            'payer': {
+                'partyIdType': 'MSISDN',
+                'partyId': '256787665431',
+            },
+            'payerMessage': 'Payment for order',
+            'payeeNote': 'Payment for order',
+        }
+        r = requests.post(url, headers=headers, data=json.dumps(data))
+        print(r.json())
+        return redirect('checkout')

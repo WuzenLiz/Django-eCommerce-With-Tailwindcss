@@ -6,4 +6,10 @@
  html {
    font-family: 'Quicksand', sans-serif;
  }
+ .font-outline-wh {
+   text-shadow: 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff;
+ }
+ .breadcrumbs > ul > li ::after{
+    z-index: -1;
+ }
 }

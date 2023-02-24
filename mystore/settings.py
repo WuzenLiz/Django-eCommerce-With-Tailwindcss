@@ -28,9 +28,9 @@ SECRET_KEY = config('SECRET_KEY',cast=str, default='CHANGEME!!!')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG',cast=str,default=True)
 
-ALLOWED_HOSTS = ['90da-118-70-177-23.ap.ngrok.io','localhost:8000']
+ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000','http://127.0.0.1:8000','https://90da-118-70-177-23.ap.ngrok.io']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000','http://127.0.0.1:8000','https://3ab6-42-115-185-80.ap.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,8 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.gis',
+    "debug_toolbar",
     
     #3rd party
+    'hitcount',
     'rest_framework',
     'rest_framework.authtoken',
     'social_django',
@@ -64,6 +66,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -234,3 +237,12 @@ SHOP_FACEBOOK = config('SHOP_FACEBOOK',default='',cast=str)
 SHOP_INSTAGRAM = config('SHOP_INSTAGRAM',default='',cast=str)
 SHOP_ZALO = config('SHOP_ZALO',default='',cast=str)
 SHOP_TIKTOK = config('SHOP_TIKTOK',default='',cast=str)
+
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+
+HITCOUNT_KEEP_HIT_ACTIVE = { 'hours': 0.5 }
+
+HITCOUNT_HITS_PER_IP_LIMIT = 1

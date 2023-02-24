@@ -13,10 +13,24 @@ def get_info(request):
     shopzalo = settings.SHOP_ZALO
     shoptiktok = settings.SHOP_TIKTOK
     itemincart = Cart.objects.filter(cart_id=request.session.get('cart_id',0)).count()
+    
+    categories, brands = None, None
+    product_search_query = request.GET.get('search')
+    
+    # if there is no search query, list all categories and brands
+    if not product_search_query:
+        categories = Category.objects.filter(is_active=True)
+        brands = Brand.objects.filter(is_active=True)
+    else:
+        categories = Category.objects.filter(is_active=True, name__icontains=product_search_query)
+        brands = Brand.objects.filter(is_active=True, name__icontains=product_search_query)
+
+    # print('categories', categories,len(categories))
 
     context = {
-        'categories': Category.objects.filter(is_active=True).all(),
-        'brands': Brand.objects.filter(is_active=True).all(),
+        'search_query': product_search_query,
+        'categories': categories,
+        'brands': brands,
         'sitename': sitename,
         'shopname': shopname,
         'shopaddress': shopaddress,

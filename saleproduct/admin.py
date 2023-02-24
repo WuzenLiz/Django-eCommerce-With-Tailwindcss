@@ -82,5 +82,15 @@ admin.site.register(Product, ProductAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
  prepopulated_fields = {'slug': ('name',)}
- list_display = ['name', 'slug']
+ list_display = ['name', 'slug','is_active', 'meta_keywords', 'meta_description', 'created_at', 'updated_at','is_active']
+ list_filter = ['name', 'is_active']
+ def get_form(self, request, obj=None, **kwargs):
+  kwargs['widgets'] = {
+    'category_icon': forms.TextInput(attrs={'placeholder': 'fa fa-home'}),
+  }
+  return super(CategoryAdmin, self).get_form(request, obj, **kwargs)
 admin.site.register(Category, CategoryAdmin)
+
+class HomeBannerContentAdmin(admin.ModelAdmin):
+ list_display = ['title','subtitle','image','link','is_active']
+admin.site.register(HomeBannerContent, HomeBannerContentAdmin)

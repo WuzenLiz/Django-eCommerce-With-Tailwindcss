@@ -138,3 +138,5 @@ GitHub.sublime-settings
 
 #Nodejs
 node_modules
+.gitsecret/keys/random_seed
+!*.secret

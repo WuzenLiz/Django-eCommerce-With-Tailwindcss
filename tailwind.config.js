@@ -20,6 +20,9 @@ module.exports = {
         "3/5": [3, 5],
         "5/3": [5, 3],
       },
+      font: {
+        'quote': ["'Josefin Sans', sans-serif"],
+      },
     },
   },
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
