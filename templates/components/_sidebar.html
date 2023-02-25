@@ -1,0 +1,56 @@
+<!-- sidebar -->
+<div class="col-span-1 bg-white px-4 pb-6 shadow rounded overflow-hidden">
+ <div class="divide-y divide-gray-200 space-y-5">
+  <div>
+   <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Categories</h3>
+   <div class="space-y-2">
+    {% for item in categories %}
+    <div class="flex items-center" data-sub_id='{{ item.slug }}-{{ item.id }}'>
+     <input type="checkbox" name="cat-1" id="cat-1" class="text-primary focus:ring-0 rounded-sm cursor-pointer">
+     <label for="cat-1" class="text-gray-600 ml-3 cusror-pointer">{{ item.name }}</label>
+     <div class="ml-auto text-gray-600 text-sm">({{ item.get_number_of_products }})</div>
+    </div>
+    {% endfor %}
+   </div>
+  </div>
+
+  <div class="pt-4 hidden">
+   <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">subcategories</h3>
+   <div class="space-y-2">
+    {% for item in subcategories %}
+        <div class="items-center hidden" id='{{ item.get_category }}-{{ item.id }}'>
+            <input type="checkbox" name="brand-1" id="brand-1" class="text-primary focus:ring-0 rounded-sm cursor-pointer">
+            <label for="brand-1" class="text-gray-600 ml-3 cusror-pointer">{{ item.name }}</label>
+            <div class="ml-auto text-gray-600 text-sm">({{ item.get_number_of_products }})</div>
+        </div>
+    {% endfor %}
+   </div>
+  </div>
+
+  <div class="pt-4">
+   <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Brands</h3>
+   <div class="space-y-2">
+    {% for item in brands %}
+        <div class="flex items-center">
+        <input type="checkbox" name="brand-1" id="brand-1" class="text-primary focus:ring-0 rounded-sm cursor-pointer">
+        <label for="brand-1" class="text-gray-600 ml-3 cusror-pointer">{{ item.name }}</label>
+        <div class="ml-auto text-gray-600 text-sm">({{ item.get_number_of_products }})</div>
+        </div>
+    {% endfor %}
+   </div>
+  </div>
+
+  <div class="pt-4">
+   <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Price</h3>
+   <div class="mt-4 flex items-center">
+    <input type="text" name="min" id="min"
+        class="w-full border-gray-300 focus:border-primary rounded focus:ring-0 px-3 py-1 text-gray-600 shadow-sm"
+        placeholder="min">
+    <span class="mx-3 text-gray-500">-</span>
+    <input type="text" name="max" id="max"
+        class="w-full border-gray-300 focus:border-primary rounded focus:ring-0 px-3 py-1 text-gray-600 shadow-sm"
+        placeholder="max">
+   </div>
+  </div>
+ </div>
+</div>

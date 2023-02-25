@@ -1,0 +1,16 @@
+{
+ "scripts": {
+  "buildwatcher": "postcss ./scr/css/main.css -o ./static/css/tailwind-output.css --watch",
+  "build": "postcss ./scr/css/main.css -o ./static/css/tailwind-output.css"
+ },
+ "dependencies": {
+  "chokidar": "^3.5.3",
+  "daisyui": "^2.50.0"
+ },
+ "devDependencies": {
+  "@tailwindcss/typography": "^0.5.9",
+  "concurrently": "^7.6.0",
+  "live-server": "^1.2.2",
+  "postcss-cli": "^10.1.0"
+ }
+}

@@ -1,0 +1,108 @@
+{% extends "base_auth.html" %}
+{% load static heroicons %}
+{% block title %}
+Register
+{% endblock title %}
+{% block content %}
+<div class="hero min-h-screen bg-base-200 min-w-full">
+  <div class="hero-content w-full flex-col lg:flex-row justify-around">
+    <div class="prose text-center lg:text-left">
+      <h1 class="text-5xl font-bold">Đăng ký ngay</h1>
+      <p class="hidden py-6 italic text-2xl lg:block">
+        "Your life your style."
+      </p>
+    </div>
+    <div class="card w-full max-w-sm flex-shrink-0 bg-base-100 shadow-2xl">
+      <div class="card-body">
+        <div class="card-title justify-center">
+          <figure>
+            <img src="{% static 'img/Logo.svg' %}" alt="" class="h-20 w-20 px-2" />
+            <span class="text-xl">Zen Shop</span>
+          </figure>
+        </div>
+        <form method="post" class="authForm prose" id="registerForm">
+         {% csrf_token %}
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Tên Đăng Nhập</span>
+          </label>
+          <input type="text" id="username"
+          placeholder="Tên Đăng Nhập"
+          name="username"
+          class="input-bordered input" 
+          autofocus
+          autocomplete="new-password" />
+        </div>
+        <div class="form-control">
+         <label class="label" for='email'>
+           <span class="label-text">Email</span>
+         </label>
+         <input type="text" id="email" placeholder="Email" name="email" class="input-bordered input" />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Mật Khẩu</span>
+          </label>
+          <div class="relative">
+            <input
+            id="password"
+            type="password"
+            placeholder="Mật khẩu"
+            name="password"
+            class="input w-full input-bordered"
+            autocomplete="new-password"/>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2">
+              <label class="swap">
+                <input type="checkbox" class="password_show" data-id="password"/>
+                {% heroicon_outline 'eye' class='swap-off' %}
+                {% heroicon_outline 'eye-slash' class='swap-on' %}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Xác Nhận Mật Khẩu</span>
+          </label>
+          <div class="relative">
+            <input
+            id="password_confirm"
+            type="password"
+            placeholder="Xác Nhận Mật Khẩu"
+            name="password_confirm"
+            class="input w-full input-bordered" 
+            autocomplete="new-password"/>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2">
+              <label class="swap ">
+              <input type="checkbox" class="password_show" data-id="password_confirm"/>
+              {% heroicon_outline 'eye' class='swap-off' %}
+              {% heroicon_outline 'eye-slash' class='swap-on' %}
+              </label>
+            </div>
+          </div>
+        </div>
+        <label class="lable text-sm prose">
+         Nếu bạn đã đọc kỹ 
+         <a href="javascript:void(0)" class="text underline pt-3">
+         Điều khoản và thỏa thuận người dùng
+         </a>
+         hãy nhấn
+         <kbd class="kbd btn-primary">
+          Đăng ký
+         </kbd>
+         để tiếp tục
+        </label>
+        <div class="form-control mt-6">
+          <div class="flex w-full justify-center">
+            <button class="btn-primary btn btn-wide" type="submit">Đăng ký</button>
+          </div>
+        </div>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block extra_js %}
+ <script src="{% static 'js/register.js' %}"></script>
+{% endblock extra_js %}   

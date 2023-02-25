@@ -1,0 +1,48 @@
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html class="no-js" lang="{{ LANGUAGE_CODE }}" data-theme="cupcake">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="description" content="{% block meta_description %}{% endblock meta_description %}" />
+        <meta http-equiv="X-UA-Compatible" content="IE=7" />
+        <meta name="keywords" content="{% block meta_keywords %}{% endblock meta_keywords %}" />
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}"/>
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}"/>
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}"/>
+        <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}"/>
+        <title>
+            {{ sitename }}
+            {% block title %}{% endblock title %}
+            {% block title_suffix %}{% endblock title_suffix %}
+        </title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {# Global stylesheets #}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/tailwind-output.css' %}"/>
+        <link rel="stylesheet" type="text/css"  href="{% static 'css/tiny-slider.css' %}">
+        <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+        {% block extra_css %}
+            {# Override this in templates to add extra stylesheets #}
+        {% endblock extra_css %}
+    </head>
+
+    <body>
+        {% include 'components/_header.html' %}
+        {% include 'components/_navbar.html' %}
+
+        {% block content %}
+        {% endblock content %}
+
+        {% include "components/_footer.html" %}
+
+        {# Global javascript #}
+        {% include "corejs.html" %}
+        
+        {% block extra_js %}
+            {# Override this in templates to add extra javascript #}
+        {% endblock extra_js %}
+    </body>
+</html>
