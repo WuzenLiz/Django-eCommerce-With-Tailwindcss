@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!---->
 {% load static i18n %}
+{% load product_lib %}
 <!---->
 {% block title_suffix %}Giỏ hàng{% endblock title_suffix %}
 {% block breadcrumb  %}
@@ -21,3 +22,60 @@
 </div>
 {% endblock breadcrumb  %}
 
+{% block content %}
+<div class="container mx-auto">
+  <div class="flex flex-wrap">
+    <div class="w-full">
+    <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+      <table class="table-auto w-full">
+      <thead>
+        <tr>
+        <th class="px-4 py-2">Tên sản phẩm</th>
+        <th class="px-4 py-2">Đơn giá</th>
+        <th class="px-4 py-2">Số lượng</th>
+        <th class="px-4 py-2">Thành tiền</th>
+        <th class="px-4 py-2">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in carts %}
+        <tr>
+        <td class="border px-4 py-2">{{ item.product.product_name }}</td>
+        <td class="border px-4 py-2">{{ item.product.price|currency }}</td>
+        <td class="border px-4 py-2">{{ item.quantity }}</td>
+        <td class="border px-4 py-2">{{ item.cost|currency }}Đ</td>
+        <td class="border px-4 py-2">
+          <a href="{% url 'remove_cart_item' product_id=item.product.id  cart_item_id=item.id %}"
+            class="btn btn-danger btn-sm">
+          <i class="fa-solid fa-trash"></i>
+          </a>
+        </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+    </div>
+    </div>
+    <div class="w-full py-4">
+    <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+      <div class="flex justify-end">
+      <div class="flex flex-col">
+        <span class="font-semibold">Tổng tiền</span>
+        <span class="text-3xl font-semibold">{{ grand_total|floatformat:0|default:0 }}Đơn</span>
+      </div>
+      </div>
+    </div>
+    </div>
+    <div class="w-full py-4">
+      <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+        <div class="flex justify-end">
+        <a href="{% url 'checkout' %}"
+            class="btn btn-primary">
+          Thanh toán
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
