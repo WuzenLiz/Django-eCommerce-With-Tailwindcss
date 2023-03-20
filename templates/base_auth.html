@@ -32,12 +32,22 @@
     <body class="{% block body_class %}{% endblock body_class %}">
         {% block content %}
         {% endblock content %}
-
+        {# block for message #}
+        <div id="message" class="fixed bottom-0 right-0 m-4 z-50">
+            {% block message %}
+            <div class='alert alert-error alert-info alert-success alert-warning'>
+                <a class='close' data-dismiss='alert' href='#'>&times;</a>
+                <strong>Warning!</strong> Better check yourself, you're not looking too good.
+            </div>
+            {% endblock message %}
+        </div>
         {# Global javascript #}
         {% include "corejs.html" %}
-        <script type="text/javascript" src="{% static 'js/saleapp.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/saleop.js' %}"></script>
         {% block extra_js %}
             {# Override this in templates to add extra javascript #}
         {% endblock extra_js %}
+
+
     </body>
 </html>

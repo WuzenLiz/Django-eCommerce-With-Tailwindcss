@@ -1,0 +1,48 @@
+{% load static %}
+<div class="col-span-3">
+    <div class="bg-white shadow rounded p-4 divide-y divide-gray-200 space-y-4 text-gray-600">
+        <div class="space-y-1 pl-8">
+            <a href="{% url 'profile' %}" class="relative text-primary block font-medium capitalize transition">
+                <span class="absolute -left-8 top-0 text-base">
+                    <i class="fa-regular fa-address-card"></i>
+                </span>
+                Manage account
+            </a>
+            <a href="{% url 'profile' %}" class="relative hover:text-primary block capitalize transition">
+                Profile information
+            </a>
+            <a href="{% url 'address' %}" class="relative hover:text-primary block capitalize transition">
+                Manage addresses
+            </a>
+        </div>
+
+        <div class="space-y-1 pl-8 pt-4">
+            <a href="{% url 'order' %}" class="relative hover:text-primary block font-medium capitalize transition">
+                <span class="absolute -left-8 top-0 text-base">
+                    <i class="fa-solid fa-box-archive"></i>
+                </span>
+                My order history
+            </a>
+            {% comment %} <a href="#" class="relative hover:text-primary block capitalize transition">
+                My returns
+            </a> {% endcomment %}
+            <a href="{% url 'order'  %}" class="relative hover:text-primary block capitalize transition">
+                My Cancellations
+            </a>
+            {% comment %} <a href="#" class="relative hover:text-primary block capitalize transition disabled">
+                My reviews
+            </a> {% endcomment %}
+        </div>
+
+        <div class="space-y-1 pl-8 pt-4">
+            <a href="{% url 'logout' %}" class="relative hover:text-primary block font-medium capitalize transition">
+                <span class="absolute -left-8 top-0 text-base">
+                    <i class="fa-regular fa-arrow-right-from-bracket"></i>
+                </span>
+                Logout
+            </a>
+        </div>
+
+    </div>
+</div>
+<!-- ./sidebar -->

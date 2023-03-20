@@ -30,7 +30,7 @@ DEBUG = config('DEBUG',cast=str,default=True)
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000','http://127.0.0.1:8000','https://3ab6-42-115-185-80.ap.ngrok.io']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000','http://127.0.0.1:8000','https://c57f-118-69-6-227.ap.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
@@ -107,7 +107,7 @@ WSGI_APPLICATION = 'mystore.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': config('DATABASE_ENGI',cast=str,default='django.db.backends.postgresql_psycopg2'),
         'NAME': config('DATABASE_NAME',cast=str,default='saleapp'),
         'HOST': config('DATABASE_HOST',cast=str,default='localhost'),
         'PORT': config('DATABASE_PORT',cast=str,default='5432'),
@@ -246,3 +246,10 @@ if DEBUG:
 HITCOUNT_KEEP_HIT_ACTIVE = { 'hours': 0.5 }
 
 HITCOUNT_HITS_PER_IP_LIMIT = 1
+
+
+CART_SESSION_ID = config('CART_SESSION_ID',default='cart',cast=str)
+
+EMAIL_MASTER = config('EMAIL_MASTER',default=f'noreply@{BASE_URL}',cast=str)
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

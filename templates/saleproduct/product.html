@@ -8,7 +8,7 @@
 {% define product.main_variant as mainvariant  %}
 <!-- breadcrumb -->
 <div class="container py-4 flex items-center gap-3 mx-auto">
- <a href="../index.html" class="text-primary text-base">
+ <a href="{% url 'index' %}" class="text-primary text-base">
   <i class="fa-solid fa-house"></i>
  </a>
  <span class="text-sm text-gray-400">
@@ -40,9 +40,9 @@
   <div>
    <h2 class="text-5xl font-bold uppercase mb-2">{{ product.name }}</h2>
    <div class="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
-    <p class="text-5xl text-primary font-semibold">{{ mainvariant.price|currency }}</p>
+    <p class="text-5xl text-primary font-semibold">{{ mainvariant.sale_price|currency }}</p>
     {% if mainvariant.saleoff %}
-    <p class="text-base text-gray-400 line-through">{{ mainvariant.sale_price|currency }}</p>
+    <p class="text-base text-gray-400 line-through">{{ mainvariant.price|currency }}</p>
     {% endif %}
    </div>
    <div class="flex items-center mb-4">

@@ -1,5 +1,5 @@
 from .models import Category,Brand
-from carts.models import Cart
+from carts.models import CartItem, Cart
 from django.conf import settings
 
 def get_info(request):
@@ -12,7 +12,7 @@ def get_info(request):
     shopinstagram = settings.SHOP_INSTAGRAM
     shopzalo = settings.SHOP_ZALO
     shoptiktok = settings.SHOP_TIKTOK
-    itemincart = Cart.objects.filter(cart_id=request.session.get('cart_id',0)).count()
+    itemincart = CartItem.objects.filter(cart=Cart.objects.get_or_create(cart_id=request.session.session_key)[0]).count()
     
     categories, brands = None, None
     product_search_query = request.GET.get('search')

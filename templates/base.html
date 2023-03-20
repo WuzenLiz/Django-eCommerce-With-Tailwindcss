@@ -12,7 +12,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}"/>
         <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}"/>
         <title>
-            {{ sitename }}
+            {{ sitename }} -    
             {% block title %}{% endblock title %}
             {% block title_suffix %}{% endblock title_suffix %}
         </title>
@@ -44,6 +44,26 @@
         {% block content %}
         {% endblock content %}
         <!-- End Content -->
+
+        {# block for message #}
+        <div id="message" class="fixed bottom-0 right-0 m-4 z-50">
+            {% block message %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} shadow-lg ">
+                            <div>
+                            <i class="fa-solid fa-xmark"></i>
+                            <span>{{ message }}</span>
+                            </div>
+                      </div>
+                    {% endfor %}
+                {% endif %}
+                <div class='alert alert-error alert-info alert-success alert-warning hidden'>
+                    <a class='close' data-dismiss='alert' href='#'>&times;</a>
+                    <strong>Warning!</strong> Better check yourself, you're not looking too good.
+                </div>
+            {% endblock message %}
+        </div>
 
         <!-- Footer -->
         {% include "components/_footer.html" %}

@@ -163,6 +163,10 @@ class Product(models.Model):
         return reverse("product_detail", args=[self.slug])
 
     @property
+    def sku(self):
+        return self.variants.aggregate(models.Min("sku"))["sku__min"]
+
+    @property
     def stock(self):
         return self.variants.aggregate(models.Sum("quantity"))["quantity__sum"]
 
@@ -213,6 +217,27 @@ class Product(models.Model):
         except ProductVariant.DoesNotExist:
             return None
 
+class VariantManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+    def get_all(self):
+        return super().get_queryset()
+
+    def color(self):
+        return super(VariantManager, self).get_queryset().filter(
+            is_active=True, variation_category='color'
+        )
+    
+    def size(self):
+        return super(VariantManager, self).get_queryset().filter(
+            is_active=True, size__isnull=False, variation_category='size'
+        )
+
+VARIANT_CHOICES = (
+    ('color', 'Color'),
+    ('size', 'Size'),
+)
 class ProductVariants(models.Model):
     product = models.ForeignKey(
         Product,
@@ -220,6 +245,7 @@ class ProductVariants(models.Model):
         related_name="variants",
     )
     name = models.CharField(max_length=50)
+    variation_category = models.CharField(max_length=50, choices=VARIANT_CHOICES, default='color')
     sku = models.CharField(max_length=50,unique=True)
     price = models.DecimalField(max_digits=9, decimal_places=2)
     saleoff = models.IntegerField(default=0)
@@ -245,6 +271,18 @@ class ProductVariants(models.Model):
     @property
     def sale_price(self):
         return self.price - (self.price * self.saleoff / 100)
+
+    @property
+    def is_out_of_stock(self):
+        return self.quantity <= 0
+
+    @property
+    def stock(self):
+        return self.quantity
+
+    @property
+    def product_name(self):
+        return self.product.name + "-" + self.name
 
     def save(self):
         if self.is_main:

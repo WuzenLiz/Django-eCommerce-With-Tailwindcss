@@ -55,7 +55,7 @@ services:
 
 
   db:
-    image: postgis/postgis
+    image: postgres:latest
     restart: always
     volumes:
       - pgdb:/var/lib/postgresql/data

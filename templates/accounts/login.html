@@ -1,5 +1,6 @@
 {% extends "base_auth.html" %}
 {% load static %}
+{% load settings %}
 {% block content %}
 <div class="hero min-h-screen bg-base-200">
   <div class="hero-content flex-col lg:flex-row-reverse">
@@ -14,7 +15,7 @@
         <div class="card-title justify-center">
           <figure>
             <img src="{% static 'img/Logo.svg' %}" alt="" class="h-20 w-20" />
-            <span class="text-xl">Zen Shop</span>
+            <span class="text-xl">{% settings 'SHOP_NAME' %}</span>
           </figure>
         </div>
         <form method="post" class="authForm">
@@ -35,7 +36,7 @@
             name="password"
             class="input-bordered input" />
           <label class="label">
-            <a href="#" class="link-hover label-text-alt link">Forgot password?</a>
+            <a href="{% url 'forgot_password' %}" class="link-hover label-text-alt link">Forgot password?</a>
           </label>
         </div>
         <div class="form-control mt-6">
@@ -55,3 +56,23 @@
   </div>
 </div>
 {% endblock content %}
+{% block message %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} shadow-lg ">
+        <div>
+          <i class="fa-solid fa-xmark"></i>
+          <span>{{ message }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% if form.errors %}
+    <div class="alert alert-error shadow-lg">
+      <div>
+        <i class="fa-solid fa-xmark"></i>
+        <span>{{ form.errors }}</span>
+      </div>
+    </div>
+  {% endif %}
+{% endblock message %} 

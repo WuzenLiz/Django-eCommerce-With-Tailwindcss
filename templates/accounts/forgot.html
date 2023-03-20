@@ -1,0 +1,58 @@
+{% extends "base_auth.html" %}
+{% load static %}
+{% load settings %}
+{% block content %}
+<div class="hero min-h-screen bg-base-200">
+  <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="prose text-center lg:text-left">
+      <h1 class="text-5xl font-bold">Shop now!</h1>
+      <p class="py-6 italic text-2xl">
+        Your life your style.
+      </p>
+    </div>
+    <div class="card w-full max-w-sm flex-shrink-0 bg-base-100 shadow-2xl">
+      <div class="card-body">
+        <div class="card-title justify-center">
+          <figure>
+            <img src="{% static 'img/Logo.svg' %}" alt="" class="h-20 w-20" />
+            <span class="text-xl">{% settings 'SHOP_NAME' %}</span>
+          </figure>
+        </div>
+
+        <form method="post" class="forgotForm">
+          {% csrf_token %}
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Email</span>
+            </label>
+            <input type="email" placeholder="Email" name="username" class="input-bordered input" />
+            <label class="label mx-auto mt-4 prose">
+              <a href="{% url 'login' %}" class="link-hover text-md label-text-alt link">Login</a>
+            </label>
+          </div>
+          <div class="form-control mt-6">
+            <div class="flex w-full">
+              
+              <div class="card grid h-20 flex-grow place-items-center">
+                <button class="btn-primary btn" type="submit">Reset Password</button>
+              </div>
+            </div>
+          </div>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block message %}
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} shadow-lg">
+      <div>
+        <i class="fa-solid fa-xmark"></i>
+        <span>{{ message }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endblock message %}

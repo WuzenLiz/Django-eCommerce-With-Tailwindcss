@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Tài khoản{% endblock %}
+
+{% block breadcrumb %}
+<div class="container py-4 flex items-center gap-3">
+    <a href="{% url 'index' %}" class="text-primary text-base">
+        <i class="fa-solid fa-house"></i>
+    </a>
+    <span class="text-sm text-gray-400">
+        <i class="fa-solid fa-chevron-right"></i>
+    </span>
+    <p class="text-gray-600 font-medium">
+        <i class="fa-solid fa-user"></i>
+        Account
+    </p>
+</div>
+{% endblock breadcrumb %}
+
+
+{% block content %}
+<div class="container grid grid-cols-12 items-start gap-6 pt-4 pb-16 mx-auto">
+    {% include './misc/sidebar.html' %}
+    {% block Account_Content %}
+    {% endblock Account_Content %}
+</div>
+{% endblock content %}

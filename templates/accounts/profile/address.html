@@ -1,0 +1,36 @@
+{% extends './Account_base.html' %}
+
+{% block title %}Sổ địa chỉ{% endblock %}
+
+{% block Account_Content %}
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Sổ địa chỉ</h3>
+    </div>
+    <div class="box-body">
+        <table id="addressTable" class="table table-bordered table-striped  w-full">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Địa chỉ</th>
+                    <th>Điện thoại</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in address %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.address }}</td>
+                    <td>{{ item.phone }}</td>
+                    <td>
+                        <a href="{% url 'update_address' id=item.id %}" class="btn btn-primary btn-sm">Sửa</a>
+                        <a href="{% url 'delete_address' id=item.id %}" class="btn btn-danger btn-sm">Xóa</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock Account_Content %}

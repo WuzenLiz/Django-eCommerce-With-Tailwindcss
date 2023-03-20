@@ -10,7 +10,6 @@ def define(val=None):
 @register.filter
 def currency(value):
   # to vietnamese currency
-  print(localize(value))
   if value == 0:
     return 'Liên hệ'
-  return number_format(value, decimal_pos=0, use_l10n=True, force_grouping=True) + 'đ'
+  return number_format(value, decimal_pos=0, use_l10n=True, force_grouping=True) + 'D'

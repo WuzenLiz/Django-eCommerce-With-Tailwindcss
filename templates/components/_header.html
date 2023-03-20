@@ -50,9 +50,13 @@
      <i class="fa-solid fa-bag-shopping"></i>
     </div>
     <div class="text-xs leading-3">Cart</div>
-    <div
-     class="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
-     {{ itemincart }}
+    <div data-itemincart="{% if user.is_authenticated %}{{itemincart }}{% else %}0{% endif %}}"
+     class="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs item-in-cart">
+      {% if user.is_authenticated %}
+         {{ itemincart }}
+      {% else %}
+         {{ itemincart }}
+      {% endif %}
     </div>
    </a>
    <a

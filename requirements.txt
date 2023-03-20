@@ -121,7 +121,7 @@ packaging==23.0
     #   build
 pip-tools==6.12.2
     # via -r requirements.in
-psycopg2==2.9.5
+psycopg2-binary==2.9.5
     # via -r requirements.in
 pycparser==2.21
     # via

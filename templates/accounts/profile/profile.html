@@ -1,0 +1,47 @@
+{% extends './Account_base.html' %}
+
+{% load static %}
+
+{% block Account_Content %}
+    <!-- info -->
+    <div class="col-span-9 grid grid-cols-3 gap-4">
+
+        <div class="shadow rounded bg-white px-4 pt-6 pb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-medium text-gray-800 text-lg">Thông tin tài khoản</h3>
+                <a href="javascript:void(0)" class="text-primary">Edit</a>
+            </div>
+            <div class="space-y-1">
+                <h4 class="text-gray-700 font-medium">Tên người dùng:{{ user.fullname|default:user.username }}</h4>
+                <p class="text-gray-800">Email: {{ user.email }}</p>
+                <p class="text-gray-800">Số điện thoại:{{ user.phone|default_if_none:'Chưa cập nhập' }}</p>
+            </div>
+        </div>
+
+        <div class="shadow rounded bg-white px-4 pt-6 pb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-medium text-gray-800 text-lg">Địa chỉ</h3>
+                <a href="{% url 'address' %}" class="text-primary">Edit</a>
+            </div>
+            <div class="space-y-1">
+                <h4 class="text-gray-700 font-medium">Tên người nhận: {{ address.receiver_name|default:user.fullname|default_if_none:user.username }}</h4>
+                <p class="text-gray-800">Địa chỉ: {{ address.address|default_if_none:'Chưa cập nhập' }}</p>
+                <p class="text-gray-800">Số điện thoại: {{ address.phone|default_if_none:'Chưa cập nhập' }}</p>
+            </div>
+        </div>
+
+        <div class="shadow rounded bg-white px-4 pt-6 pb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-medium text-gray-800 text-lg">Thông tin thêm</h3>
+            </div>
+            <div class="space-y-1">
+                <p class="text-gray-800">
+                    Đã mua: {{ bought_total|default:0 }} đơn hàng
+                </p>
+                <p class="text-gray-800">Đã Thanh toán: {{ Total_cost.total|default_if_none:0 }} VNĐ</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- ./info -->
+{% endblock Account_Content %}

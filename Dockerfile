@@ -26,7 +26,6 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
     binutils \
     libproj-dev \
     gdal-bin \
-    postgis \
     gettext \
     gettext-base \
     && apt-get clean \
