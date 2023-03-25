@@ -12,9 +12,9 @@
   style="background-image: url({{ BannerContent.image.url }});">
   <div class="container mx-auto px-5 lg:px-0">
    <h1 class="text-6xl text-purple-100 font-medium mb-4 capitalize prose whitespace-normal font-outline-wh">
-    {{ BannerContent.title }}
+    {{ BannerContent.title|default_if_none:' ' }}
    </h1>
-   <p class="text-base text-purple-200 font-medium italic font-quote whitespace-nowrap font-outline-wh">{{ BannerContent.subtitle }}</p>
+   <p class="text-base text-purple-200 font-medium italic font-quote whitespace-nowrap font-outline-wh">{{ BannerContent.subtitle|default_if_none:' ' }}</p>
   </div>
   <a href="{{ BannerContent.link|default_if_none:'javascript:void(0)' }}"></a>
  </div>
@@ -32,8 +32,8 @@
     alt="Delivery"
     class="w-12 h-12 object-contain" />
    <div class="prose">
-    <h4 class="font-medium capitalize text-lg">Free Shipping</h4>
-    <p class="text-gray-500 text-sm">Order over $200</p>
+    <h4 class="font-medium capitalize text-lg">Miễn Phí vận chuyển</h4>
+    <p class="text-gray-500 text-sm">Đơn hàng trên 200</p>
    </div>
   </div>
   <div
@@ -43,8 +43,8 @@
     alt="Delivery"
     class="w-12 h-12 object-contain" />
    <div class="prose">
-    <h4 class="font-medium capitalize text-lg">Money Returns</h4>
-    <p class="text-gray-500 text-sm">30 days money returns</p>
+    <h4 class="font-medium capitalize text-lg">Hoàn tiền</h4>
+    <p class="text-gray-500 text-sm">Lỗi 1 đổi 1</p>
    </div>
   </div>
   <div
@@ -54,8 +54,8 @@
     alt="Delivery"
     class="w-12 h-12 object-contain" />
    <div class="prose">
-    <h4 class="font-medium capitalize text-lg">24/7 Support</h4>
-    <p class="text-gray-500 text-sm">Customer support</p>
+    <h4 class="font-medium capitalize text-lg">Hỗ trợ 24/7</h4>
+    <p class="text-gray-500 text-sm">Đội ngũ chuyên nghiệp</p>
    </div>
   </div>
  </div>
@@ -66,7 +66,7 @@
 {% if Categories %}
 <div class="container py-16 mx-auto px-9 lg:px-3">
  <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">
-  Theo theo danh mục
+  Theo danh mục
  </h2>
  <div class="grid grid-cols-4 gap-3">
   {% for item in Categories %}
@@ -91,7 +91,7 @@
 {% if Brands %}
 <div class="container py-16 mx-auto px-9 lg:px-3">
  <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">
-  Theo theo nhãn hiệu
+  Theo nhãn hiệu
  </h2>
  <div class="grid grid-cols-4 gap-3">
   {% for item in Brands %}
