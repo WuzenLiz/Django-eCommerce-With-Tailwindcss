@@ -12,6 +12,8 @@ def get_info(request):
     shopinstagram = settings.SHOP_INSTAGRAM
     shopzalo = settings.SHOP_ZALO
     shoptiktok = settings.SHOP_TIKTOK
+    if request.session.session_key is None:
+        request.session.save() 
     itemincart = CartItem.objects.filter(cart=Cart.objects.get_or_create(cart_id=request.session.session_key)[0]).count()
     
     categories, brands = None, None
@@ -24,8 +26,6 @@ def get_info(request):
     else:
         categories = Category.objects.filter(is_active=True, name__icontains=product_search_query)
         brands = Brand.objects.filter(is_active=True, name__icontains=product_search_query)
-
-    # print('categories', categories,len(categories))
 
     context = {
         'search_query': product_search_query,

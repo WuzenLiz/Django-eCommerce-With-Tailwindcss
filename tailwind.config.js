@@ -25,7 +25,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography"), require("daisyui"),require('@tailwindcss/forms'),require('@tailwindcss/aspect-ratio')],
+  plugins: [require("@tailwindcss/typography"), require("daisyui"),require('@tailwindcss/forms')],
   daisyui: {
     styled: true,
     themes: true,

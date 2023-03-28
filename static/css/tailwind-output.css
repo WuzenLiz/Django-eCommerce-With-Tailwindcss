@@ -3768,8 +3768,8 @@ select {
 .hidden {
   display: none;
 }
-.aspect-auto {
-  aspect-ratio: auto;
+.aspect-\[9\/16\] {
+  aspect-ratio: 9/16;
 }
 .h-20 {
   height: 5rem;
@@ -3885,9 +3885,6 @@ select {
 }
 .max-w-lg {
   max-width: 32rem;
-}
-.max-w-3xl {
-  max-width: 48rem;
 }
 .max-w-xs {
   max-width: 20rem;
@@ -4260,9 +4257,6 @@ select {
 }
 .text-center {
   text-align: center;
-}
-.text-end {
-  text-align: end;
 }
 .text-5xl {
   font-size: 3rem;

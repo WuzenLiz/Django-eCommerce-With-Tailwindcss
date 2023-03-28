@@ -1,13 +1,9 @@
-# Use an official Python runtime based on "bullseye" as a parent image.
 FROM node:current-bullseye-slim
 
-COPY package.json /
-COPY package-lock.json /
+RUN npm install -g npm@latest
 
-# Use /app folder as a directory where the source code is stored.
 WORKDIR /app
 
-# Copy the source code of the project into the container.
-COPY . .
+COPY package*.json .
 
-
+RUN npm install
