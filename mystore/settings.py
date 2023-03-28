@@ -255,3 +255,10 @@ EMAIL_MASTER = config('EMAIL_MASTER',default=f'noreply@{BASE_URL}',cast=str)
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 PAGINATE_BY = config('PAGINATE_BY',default=10,cast=int)
+
+# VNPAY CONFIG
+VNPAY_RETURN_URL = config('VNPAY_RETURN_URL',default='http://localhost:8000/payment/return',cast=str)
+VNPAY_PAYMENT_URL = config('VNPAY_PAYMENT_URL',default='https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',cast=str)
+VNPAY_API_URL = config('VNPAY_API_URL',default='https://sandbox.vnpayment.vn/merchant_webapi/merchant.html',cast=str) 
+VNPAY_TMN_CODE = config('VNPAY_TMN_CODE',default='',cast=str) # Merchant code, get from config
+VNPAY_HASH_SECRET_KEY = config('VNPAY_HASH_SECRET_KEY',default='',cast=str) # Hash secret key, get from config

@@ -5,23 +5,23 @@
 {% block title_suffix %}Giỏ hàng{% endblock title_suffix %}
 <!---->
 {% block breadcrumb %}
-<div class="py-5 pl-10 breadcrumbs z-0">
+<div class="py-5 pl-10 breadcrumbs z-[-1]">
   <ul>
     <li>
-      <a href="{% url 'index' %}" class="text-primary text-base hover:text-lg">
+      <a href="{% url 'index' %}" class="text-primary text-base">
         <i class="fa-solid fa-house"></i>
       </a>
     </li>
     <li>
       <a href="{% url 'cart' %}" class="text-primary text-base">
         <i class="fa-solid fa-shopping-cart"> </i>
-        <p class="text-base font-semibold hover:text-lg">Giỏ hàng</p>
+        <p class="text-base font-semibold">Giỏ hàng</p>
       </a>
     </li>
     <li>
       <a href="{% url 'cart' %}" class="text-primary text-base">
         <i class="fa-solid fa-money-bill"></i>
-        <p class="text-base font-semibold hover:text-lg">Thanh Toán</p>
+        <p class="text-base font-semibold ">Thanh Toán</p>
       </a>
     </li>
   </ul>
@@ -35,9 +35,39 @@
   </div>
   <div class="col-span-12 lg:col-span-8">
     <!-- Cart infor mation-->
-    {% for item in cart_items %}
-    <div></div>
-    {% endfor %}
+    <div class="row-span-1 bg-white rounded-lg shadow-lg">
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-gray-600">Thông tin giỏ hàng</h3>
+      </div>
+    </div>
+    <div class="row-span-1 mt-1 bg-white rounded-lg shadow-lg">
+      <div class="p-4">
+        <div class="grid grid-cols-6 gap-2 mt-4">
+          <p class="text-base font-semibold text-gray-600 col-span-3">Sản phẩm</p>
+          <p class="text-base font-semibold text-gray-400 col-span-1">Đơn Giá</p>
+          <p class="text-base font-semibold text-gray-400 col-span-1">Số lượng</p>
+          <p class="text-base font-semibold text-gray-400 col-span-1">Thành tiền</p>
+        </div>
+        <div class="grid grid-cols-6 gap-2 mt-4 content-end">
+          {% for item in cart_items %}
+          <div class="flex items-center text-gray-600 col-span-3">
+            <img
+              src="{{ item.product.product_image.url }}"
+              alt=""
+              class="w-16 h-16 object-cover rounded-lg"
+            />
+            <a href="{% url 'product_detail' item.product.id %}" class="px-2 text-base font-semibold">{{ item.product.product_name }}</a>
+          </div>
+          <p class="text-base font-semibold text-gray-600 col-span-1">Đơn Giá</p>
+          <p class="text-base font-semibold text-gray-600 col-span-1">Số lượng</p>
+          <p class="text-base font-semibold text-gray-600 col-span-1">Thành tiền</p>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="flex items-center justify-center py-2">
+        <a href="{% url 'shop' %}" class="text-gray-800 font-semibold ">Tìm thêm sản phẩm</a>
+      </div>
+    </div>
   </div>
   <div class="col-span-12 lg:col-span-4 grid-rows-4 gap-3">
     <!-- Total cost -->

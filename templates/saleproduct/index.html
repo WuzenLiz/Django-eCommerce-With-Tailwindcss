@@ -11,11 +11,6 @@
   class="bg-cover bg-no-repeat bg-center py-36 max-h-[40vw] "
   style="background-image: url({{ BannerContent.image.url }});">
   <div class="container mx-auto px-5 lg:px-0">
-   <h1 class="text-6xl text-purple-100 font-medium mb-4 capitalize prose whitespace-normal font-outline-wh">
-    {{ BannerContent.title|default_if_none:' ' }}
-   </h1>
-   <p class="text-base text-purple-200 font-medium italic font-quote whitespace-nowrap font-outline-wh">{{ BannerContent.subtitle|default_if_none:' ' }}</p>
-  </div>
   <a href="{{ BannerContent.link|default_if_none:'javascript:void(0)' }}"></a>
  </div>
 {% endif %}

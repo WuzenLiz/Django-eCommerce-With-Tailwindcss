@@ -138,11 +138,6 @@ class Product(models.Model):
     # SubCategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE,parent_link=True)
     is_active = models.BooleanField(default=True)
 
-    class Meta:
-        ordering = ("-created_at",)
-        verbose_name = "product"
-        verbose_name_plural = "products"
-
     # using for manage product
     objects = ProductManager()
 
@@ -175,12 +170,12 @@ class Product(models.Model):
         return self.variants.aggregate(models.Max("price"))["price__max"]
 
     @property
-    def lowest_price(self):
-        return self.variants.aggregate(models.Min("price"))["price__min"]
-
-    @property
     def sale_price(self):
         return self.variants.aggregate(models.Min("sale_price"))["sale_price__min"]
+
+    @property
+    def price(self):
+        return self.variants.aggregate(models.Min("price"))["price__min"]
 
     @property
     def is_best_seller(self):
@@ -191,22 +186,14 @@ class Product(models.Model):
     def is_out_of_stock(self):
         return self.stock <= 0
 
+    @property
     def images(self):
-        try:
-            return self.images.filter(is_active=True)
-        except ProductImage.DoesNotExist:
-            return None
+        return self.main_image
 
     def variants(self):
         try:
             return self.variants.filter(is_active=True)
         except ProductVariant.DoesNotExist:
-            return None
-
-    def related_products(self):
-        try:
-            return self.categories.products.filter(is_active=True)
-        except Product.DoesNotExist:
             return None
 
     def attributes(self):
@@ -220,6 +207,11 @@ class Product(models.Model):
             return self.variants.get(is_main=True)
         except ProductVariant.DoesNotExist:
             return None
+    
+    class Meta:
+        ordering = ("-created_at",)
+        verbose_name = "product"
+        verbose_name_plural = "products"
 
 class VariantManager(models.Manager):
     def get_queryset(self):
@@ -259,7 +251,7 @@ class ProductVariants(models.Model):
     quantity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    variantImage = models.ImageField(upload_to="res/image/variants", blank=True, null=True)
+    variant_image = models.ImageField(upload_to="res/image/variants", blank=True, null=True)
 
     is_main = models.BooleanField(default=False)
 
@@ -291,7 +283,10 @@ class ProductVariants(models.Model):
     
     @property
     def product_image(self):
-        return self.variantImage
+        if self.variant_image:
+            return self.variant_image
+        else:
+            return self.product.main_image
 
     def save(self):
         if self.is_main:

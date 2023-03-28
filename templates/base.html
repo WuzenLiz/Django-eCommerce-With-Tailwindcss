@@ -33,6 +33,7 @@
         <div class="flex flex-col h-screen justify-between">
         <!-- Nav - header -->
         {% include 'components/_header.html' %}
+        <!---->
         {% include 'components/_navbar.html' %}
         <!-- End Nav - header -->
 
@@ -41,9 +42,8 @@
         <!-- End breadcrumb -->
 
         <!-- Content -->
-        <div class="mb-auto">
-        {% block content %}
-        {% endblock content %}
+        <div class="mb-auto pb-3">
+        {% block content %}{% endblock content %}
         </div>
         <!-- End Content -->
 
@@ -54,10 +54,10 @@
                     {% for message in messages %}
                         <div class="alert alert-{{ message.tags }} shadow-lg ">
                             <div>
-                            <i class="fa-solid fa-xmark"></i>
-                            <span>{{ message }}</span>
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>{{ message }}</span>
                             </div>
-                      </div>
+                        </div>
                     {% endfor %}
                 {% endif %}
                 <div class='alert alert-error alert-info alert-success alert-warning hidden'>

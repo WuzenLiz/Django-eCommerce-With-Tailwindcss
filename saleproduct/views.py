@@ -74,18 +74,8 @@ class ProductDetailView(HitCountDetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Products'] = Product.objects.get(slug=self.kwargs['slug'])
-        context['RelatedProducts'] = Product.objects.filter(
-            category__slug=self.kwargs['slug'])[:4]
+        context['RelatedProducts'] = Product.objects.filter(is_active=True).order_by('?')[:4]
         return context
-
-    def product_detail(request, slug):
-        """Product detail page."""
-        product = Product.objects.get(slug=slug)
-        context = {
-            'product': product,
-        }
-        return render(request, 'saleproduct/product.html', context)
-
 
 def category(request, slug,):
     """Category detail page."""

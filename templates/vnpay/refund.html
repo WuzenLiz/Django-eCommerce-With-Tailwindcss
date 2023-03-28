@@ -1,0 +1,40 @@
+{% extends "base_layout.html" %}
+{% block content %}
+
+    <h3>{{ title }}</h3>
+    <div class="table-responsive">
+        <form action="{% url "query" %}" id="create_form" method="post">
+
+            <div class="form-group">
+                <label for="order_id">Mã hóa đơn</label>
+                <input class="form-control" id="order_id"
+                       name="order_id" type="text"/>
+            </div>
+            <div class="form-group">
+                <label for="order_id">Số tiền hoàn trả</label>
+                <input class="form-control" id="amount"
+                       name="amount" type="text"/>
+            </div>
+            <div class="form-group">
+                <label for="order_id">Nội dung/lý do hoàn trả</label>
+                <input class="form-control" id="order_desc"
+                       name="order_desc" type="text"/>
+            </div>
+            <div class="form-group">
+                <label for="order_id">Thời gian Thanh toán</label>
+                <input class="form-control" id="trans_date"
+                       name="trans_date" type="text"/>
+            </div>
+            <div class="form-group">
+                <label for="order_id">Ngày GD</label>
+                <input class="form-control" id="trans_date"
+                       name="trans_date" type="text"/>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Query</button>
+            </div>
+            {% csrf_token %}
+        </form>
+    </div>
+
+{% endblock %}
