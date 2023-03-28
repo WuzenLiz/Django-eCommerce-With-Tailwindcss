@@ -89,9 +89,13 @@ class userAddressBook(models.Model):
         return self.address
 
     def save(self, *args, **kwargs):
+        # User must have one main address
         if self.is_main_address == True:
             userAddressBook.objects.filter(user=self.user).update(
                 is_main_address=False)
+        # If user has no main address, set this address as main address
+        elif userAddressBook.objects.filter(user=self.user, is_main_address=True).count() == 0:
+            self.is_main_address = True
         else:
             pass
         super(userAddressBook, self).save(*args, **kwargs)
@@ -104,13 +108,12 @@ class userAddressBook(models.Model):
             pass
         super(userAddressBook, self).delete(*args, **kwargs)
 
-    @staticmethod
-    def get_user_default_address(user):
+    @property
+    def default_address(self):
         try:
-            return userAddressBook.objects.get(user=user, is_main_address=True)
+            return self.objects.filter(user=self.user, is_main_address=True)
         except:
-            return False
-
+            return None
 
 class userInfomation(models.Model):
     user = models.OneToOneField(CustomUserAccount, on_delete=models.CASCADE)

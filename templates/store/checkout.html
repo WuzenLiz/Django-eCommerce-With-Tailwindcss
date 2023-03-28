@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 <!---->
-{% load static i18n humanize %} 
+{% load static i18n humanize settings %}
 <!---->
 {% block title_suffix %}Giỏ hàng{% endblock title_suffix %}
 <!---->
@@ -36,10 +36,176 @@
   <div class="col-span-12 lg:col-span-8">
     <!-- Cart infor mation-->
     {% for item in cart_items %}
-    <div>
-    </div>
+    <div></div>
     {% endfor %}
+  </div>
+  <div class="col-span-12 lg:col-span-4 grid-rows-4 gap-3">
+    <!-- Total cost -->
+    <div class="row-span-1 bg-white rounded-lg shadow-lg">
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-gray-600">Tổng tiền</h3>
+        <div class="flex justify-between items-center mt-4">
+          <p class="text-base font-semibold text-gray-600">Tạm tính</p>
+          <p class="text-base font-semibold text-gray-600">
+            {{ total|floatformat:0 }} vnđ
+          </p>
+        </div>
+        <div class="flex justify-between items-center mt-4">
+          <p class="text-base font-semibold text-gray-600">Phí vận chuyển</p>
+          {% if total > 200000 %}
+          <p class="text-base font-semibold text-gray-600">Miễn phí</p>
+          {% else %}
+          <p class="text-base font-semibold text-gray-600">30.000 vnđ</p>
+          {% endif %}
+        </div>
+        <div class="flex justify-between items-center mt-4">
+          <p class="text-base font-semibold text-gray-600">Tổng tiền</p>
+          {% if total > 200000 %}
+          <p class="text-base font-semibold text-gray-600">
+            {{ cart_total|floatformat:0 }} vnđ
+          </p>
+          {% else %}
+          <p class="text-base font-semibold text-gray-600">
+            {{ cart_total|default:0|add:30000|floatformat:0 }} vnđ
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- Delivery address -->
+    <div class="row-span-1 bg-white rounded-lg shadow-lg mt-1">
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-gray-600">Địa chỉ giao hàng</h3>
+        <div
+          class="flex flex-col ml-4 {% if not address.default_address %}hidden{% endif %}"
+        >
+          <p class="text-base font-semibold text-gray-600">
+            Người nhận: {{ address.default_address.receiver_name }}
+          </p>
+          <p class="text-base font-semibold text-gray-600">
+            SĐT: {{ address.default_address.phone }}
+          </p>
+          <p
+            class="text-base font-semibold text-gray-600 overflow-auto break-before-auto"
+          >
+            Địa chỉ: {{ address.default_address.address }}
+          </p>
+        </div>
+      </div>
+      <!-- select address -->
+      <div class="flex justify-center mt-4 pb-4">
+        <label for="select_Address">Chọn địa chỉ</label>
+      </div>
+    </div>
+    <!-- Payment method -->
+    <div class="row-span-1 bg-white rounded-lg shadow-lg mt-1">
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-gray-600">Phương thức thanh toán</h3>
+        {% for item in payment_method %}
+        <div class="flex items-center mt-4">
+          <input
+            type="radio"
+            name="payment"
+            id="payment-{% get_key item %}"
+            class="w-5 h-5 text-primary"
+          />
+          <label
+            for="payment-{% get_key item %}"
+            class="ml-2 text-base font-semibold text-gray-600"
+            >{% get_value item %}</label
+          >
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- Order note -->
+    <div class="row-span-1 bg-white rounded-lg shadow-lg mt-1">
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-gray-600">Ghi chú</h3>
+        <textarea
+          placeholder="Thông tin thêm"
+          name="note"
+          id="note"
+          cols="30"
+          rows="5"
+          class="w-full textarea mt-4 p-2 border border-gray-300 rounded-lg "
+        >
+        </textarea>
+      </div>
+    </div>
+    <!-- Order button -->
+    <div class="row-span-1 bg-transparent mt-4">
+      <div class="p-4">
+        <form action="{% url 'order_create' %}" method="POST">
+          {% csrf_token %}
+          <input
+            type="hidden"
+            name="total"
+            value="{{ cart_total|default:0|add:30000|floatformat:0 }}"
+          />
+          <input
+            type="hidden"
+            name="payment"
+            value="Thanh toán khi nhận hàng"
+          />
+          <input type="hidden" name="cart_id" value="{{ cart_id }}" />
+          <button
+            type="submit"
+            class="w-full flex justify-center items-center bg-primary text-white rounded-lg py-3 px-4 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+          >
+            <i class="fa-solid fa-shopping-cart"></i>
+            <span class="ml-2">Đặt hàng</span>
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 <!---->
+<!-- Modal| select address -->
+<input type="checkbox" id="select_Address" class="modal-toggle" />
+<label for="select_Address" class="modal modal-bottom sm:modal-middle">
+  <label
+    for=""
+    class="modal-box relative min-h-[30%] flex flex-col justify-between"
+  >
+    <div class="modal-header flex justify-between items-center">
+      <h3 class="text-xl font-bold text-gray-600">Chọn địa chỉ</h3>
+      <label for="select_Address" class="modal-close" class="btn"
+        ><i class="fa-solid fa-times"></i
+      ></label>
+    </div>
+    <div class="modal-body">
+      <div class="flex flex-col">
+        {% for item in addresses %}
+        <div class="flex items-center mt-4">
+          <input
+            type="radio"
+            name="address"
+            id="address-{{ item.id }}"
+            class="w-5 h-5 text-primary"
+          />
+          <label
+            for="address-{{ item.id }}"
+            class="ml-2 text-base font-semibold text-gray-600"
+          >
+            <h5 class="text-base font-semibold text-gray-600">
+              {{ item.receiver_name }}
+            </h5>
+            <p class="text-base font-semibold text-gray-600">
+              {{ item.phone }}
+            </p>
+            <p class="text-base font-semibold text-gray-600">
+              {{ item.address }}
+            </p>
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="modal-footer text-center">
+      <a href="{% url 'address' %}">Thêm địa chỉ</a>
+    </div>
+  </label>
+</label>
 {% endblock content %}

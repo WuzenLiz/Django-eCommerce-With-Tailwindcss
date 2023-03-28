@@ -55,7 +55,7 @@ services:
     volumes:
       - .:/app
       - node_modules:/app/node_modules
-    command: ["sh", "-c", "npm install -g --save @tailwindcss/aspect-ratio && npm run buildwatcher"]
+    command: ["sh", "-c", "npm run build"]
 
   db:
     image: postgres:latest

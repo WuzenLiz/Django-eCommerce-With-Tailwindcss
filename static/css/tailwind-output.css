@@ -3542,6 +3542,9 @@ select {
   height: 100%;
   width: 0.125rem;
 }
+.modal-bottom {
+  align-items: flex-end;
+}
 .btn-group .btn:not(:first-child):not(:last-child), .btn-group.btn-group-horizontal .btn:not(:first-child):not(:last-child) {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -3693,6 +3696,9 @@ select {
 .col-span-9 {
   grid-column: span 9 / span 9;
 }
+.row-span-1 {
+  grid-row: span 1 / span 1;
+}
 .m-4 {
   margin: 1rem;
 }
@@ -3707,6 +3713,9 @@ select {
 .my-3 {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
+}
+.mb-auto {
+  margin-bottom: auto;
 }
 .mt-4 {
   margin-top: 1rem;
@@ -3747,8 +3756,11 @@ select {
 .mt-8 {
   margin-top: 2rem;
 }
-.mb-8 {
-  margin-bottom: 2rem;
+.mt-1 {
+  margin-top: 0.25rem;
+}
+.ml-4 {
+  margin-left: 1rem;
 }
 .mt-2 {
   margin-top: 0.5rem;
@@ -3770,6 +3782,9 @@ select {
 }
 .aspect-\[9\/16\] {
   aspect-ratio: 9/16;
+}
+.h-screen {
+  height: 100vh;
 }
 .h-20 {
   height: 5rem;
@@ -3798,12 +3813,6 @@ select {
 .h-9 {
   height: 2.25rem;
 }
-.h-36 {
-  height: 9rem;
-}
-.h-full {
-  height: 100%;
-}
 .h-64 {
   height: 16rem;
 }
@@ -3815,6 +3824,9 @@ select {
 }
 .min-h-screen {
   min-height: 100vh;
+}
+.min-h-\[30\%\] {
+  min-height: 30%;
 }
 .w-full {
   width: 100%;
@@ -3865,12 +3877,6 @@ select {
 .w-44 {
   width: 11rem;
 }
-.w-36 {
-  width: 9rem;
-}
-.w-16 {
-  width: 4rem;
-}
 .w-64 {
   width: 16rem;
 }
@@ -3909,6 +3915,10 @@ select {
      -moz-user-select: none;
           user-select: none;
 }
+.break-before-auto {
+  -moz-column-break-before: auto;
+       break-before: auto;
+}
 .grid-flow-col {
   grid-auto-flow: column;
 }
@@ -3929,6 +3939,9 @@ select {
 }
 .grid-rows-3 {
   grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+.grid-rows-4 {
+  grid-template-rows: repeat(4, minmax(0, 1fr));
 }
 .flex-row {
   flex-direction: row;
@@ -4056,6 +4069,9 @@ select {
 .rounded-sm {
   border-radius: 0.125rem;
 }
+.rounded-lg {
+  border-radius: 0.5rem;
+}
 .rounded-l-md {
   border-top-left-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
@@ -4112,6 +4128,9 @@ select {
 .bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+.bg-transparent {
+  background-color: transparent;
 }
 .bg-slate-200 {
   --tw-bg-opacity: 1;
@@ -4245,6 +4264,9 @@ select {
 }
 .pl-10 {
   padding-left: 2.5rem;
+}
+.pb-4 {
+  padding-bottom: 1rem;
 }
 .pb-8 {
   padding-bottom: 2rem;
@@ -4463,9 +4485,17 @@ select {
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
+.focus\:ring-2:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
 .focus\:ring-primary:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: hsl(var(--p) / var(--tw-ring-opacity));
+}
+.focus\:ring-opacity-50:focus {
+  --tw-ring-opacity: 0.5;
 }
 .group:hover .group-hover\:visible {
   visibility: visible;
@@ -4488,6 +4518,21 @@ select {
 
   .sm\:p-6 {
     padding: 1.5rem;
+  }
+
+  .sm\:modal-middle {
+    align-items: center;
+  }
+
+  .sm\:modal-middle :where(.modal-box) {
+    width: 91.666667%;
+    max-width: 32rem;
+    --tw-translate-y: 0px;
+    --tw-scale-x: .9;
+    --tw-scale-y: .9;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    border-bottom-left-radius: var(--rounded-box, 1rem);
+    border-bottom-right-radius: var(--rounded-box, 1rem);
   }
 }
 @media (min-width: 768px) {
@@ -4565,8 +4610,8 @@ select {
     grid-column: span 8 / span 8;
   }
 
-  .lg\:mt-0 {
-    margin-top: 0px;
+  .lg\:col-span-4 {
+    grid-column: span 4 / span 4;
   }
 
   .lg\:block {
@@ -4575,10 +4620,6 @@ select {
 
   .lg\:flex {
     display: flex;
-  }
-
-  .lg\:w-1\/2 {
-    width: 50%;
   }
 
   .lg\:flex-row {
@@ -4606,10 +4647,6 @@ select {
 
   .lg\:pl-12 {
     padding-left: 3rem;
-  }
-
-  .lg\:pl-4 {
-    padding-left: 1rem;
   }
 
   .lg\:text-left {

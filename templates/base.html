@@ -30,7 +30,7 @@
     </head>
 
     <body>
-
+        <div class="flex flex-col h-screen justify-between">
         <!-- Nav - header -->
         {% include 'components/_header.html' %}
         {% include 'components/_navbar.html' %}
@@ -41,8 +41,10 @@
         <!-- End breadcrumb -->
 
         <!-- Content -->
+        <div class="mb-auto">
         {% block content %}
         {% endblock content %}
+        </div>
         <!-- End Content -->
 
         {# block for message #}
@@ -75,6 +77,6 @@
         <!-- Footer -->
         {% include "components/_footer.html" %}
         <!-- End Footer -->
-        
+        </div>
     </body>
 </html>

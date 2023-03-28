@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from accounts.models import userAddressBook as AddressBook
 from saleproduct.models import ProductVariants
 
-from .models import Cart, CartItem, Order, OrderProduct
+from .models import Cart, CartItem, Order, OrderItem, PayOrder, Payment_method
 from saleproduct.models import ProductVariants
 import json
 # Create your views here.
@@ -156,9 +156,10 @@ def update_cart(request,item_id):
         return HttpResponse(json.dumps(context), content_type='application/json')
 
 @login_required(login_url='login', redirect_field_name='next')
-def checkout(request, total=0, quantity=0, cart_items=None):
+def checkout(request):
     try:
         tax = 0
+        total = 0
         grand_total = 0
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(
@@ -181,38 +182,19 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         pass
     context = {
         'total': total,
-        'quantity': quantity,
         'cart_items': cart_items,
         'tax': tax,
         'grand_total': grand_total,
         'address_list': address,
+        'payment_method': Payment_method,
     }
     return render(request, 'store/checkout.html', context)
 
-@login_required(login_url='login', redirect_field_name='next')
-def order_create(request, total=0, quantity=0, cart_items=None):
-    current_user = request.user
-    if current_user.is_authenticated:
-        cart_items = CartItem.objects.filter(
-            user=current_user, is_active=True)
-        order_details = Order.objects.create(
-            user=current_user, order_total=total)
-        for cart_item in cart_items:
-            order_product = OrderProduct()
-            order_product.order_id = order_details.id
-            order_product.payment = order_details.payment
-            order_product.user_id = current_user.id
-            order_product.product_id = cart_item.product_id
-            order_product.quantity = cart_item.quantity
-            order_product.product_price = cart_item.product.price
-            order_product.ordered = True
-            order_product.save()
-            cart_item.delete()
-        messages.success(
-            request, "Your Order has been placed successfully")
-        return redirect('order_complete')
-    else:
-        return redirect('login')
+def order_create(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            pass
 
 def order_complete(request):
     order_id = request.GET.get('order_id')
