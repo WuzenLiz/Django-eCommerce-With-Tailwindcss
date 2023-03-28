@@ -28,11 +28,12 @@ Shop
   <div class="col-span-3">
     <div class="flex items-center mb-4">
         <select name="sort" id="sort-Category"
-            class="w-44 text-sm text-gray-600 py-3 px-4 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary">
-            <option value="">Default sorting</option>
-            <option value="price-low-to-high">Price low to high</option>
-            <option value="price-high-to-low">Price high to low</option>
-            <option value="latest">Latest product</option>
+            class="w-44 text-sm text-gray-600 py-3 px-4 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary sort-Category">
+            <option value="on_sale">Đang khuyến mãi</option>
+            <option value="latest">Mới</option>
+            {% comment %} <option value="best_seller">Bán Chạy</option> {% endcomment %}
+            <option value="price_asc">Giá: thấp tới cao</option>
+            <option value="price_desc">Giá: cao tới thấp</option>
         </select>
         {% comment %} <div class="flex gap-2 ml-auto">
             <div

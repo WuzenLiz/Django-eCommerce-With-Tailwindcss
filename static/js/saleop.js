@@ -61,15 +61,26 @@ function price_filter() {
     }
     return '&price=' + min_price + '-' + max_price;
 }
+function sort_filter() {
+    var sort = $('.sort-Category').val();
+    if (sort == '') {
+        return '';
+    }
+    return '&sort=' + sort;
+}
 
 
 // redirect to filter url
 $('.category_checkbox').change(function () {
-    document.location.href = '?' + category_filter() + brand_filter() + price_filter();
+    document.location.href = '?' + category_filter() + brand_filter() + price_filter() + sort_filter();
 });
 $('.brand-checkbox').change(function () {
-    document.location.href = '?' + category_filter() + brand_filter() + price_filter();
+    document.location.href = '?' + category_filter() + brand_filter() + price_filter() + sort_filter();
 });
 $('.price').change(function () {
-    document.location.href = '?' + category_filter() + brand_filter() + price_filter();
+    document.location.href = '?' + category_filter() + brand_filter() + price_filter() + sort_filter();
+});
+
+$('.sort-Category').change(function () {
+    document.location.href = '?' + category_filter() + brand_filter() + price_filter() + sort_filter();
 });

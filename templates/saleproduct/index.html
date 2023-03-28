@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 <!-- load page -->
 {% load static i18n humanize %} 
-{% block title %}{% endblock %}
+{% block title %}Trang chủ{% endblock %}
 {% block content%}
 
 <!-- SEO banner -->
@@ -76,7 +76,7 @@
     alt="category 1"
     class="w-full h-52 object-cover" />
    <a
-    href="{{ item.get_absolute_url }}"
+    href="{% url 'shop' %}?category={{ item.slug }}"
     class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">
     {{ item.name }}
    </a>
@@ -101,7 +101,7 @@
     alt="{{ item.name }}"
     class="w-full h-52 object-cover" />
    <a
-    href="{{ item.get_absolute_url }}"
+    href="{% url 'shop' %}?brand={{ item.slug }}"
     class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">
     {{ item.name }}
    </a>

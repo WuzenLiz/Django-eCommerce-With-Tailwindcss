@@ -179,6 +179,10 @@ class Product(models.Model):
         return self.variants.aggregate(models.Min("price"))["price__min"]
 
     @property
+    def sale_price(self):
+        return self.variants.aggregate(models.Min("sale_price"))["sale_price__min"]
+
+    @property
     def is_best_seller(self):
         # count the number of order
         return self.variants.aggregate(models.Sum("quantity"))["quantity__sum"] > 0
@@ -196,12 +200,6 @@ class Product(models.Model):
     def variants(self):
         try:
             return self.variants.filter(is_active=True)
-        except ProductVariant.DoesNotExist:
-            return None
-
-    def variants_image(self):
-        try:
-            return self.variants.filter(is_active=True).images.filter(is_active=True)
         except ProductVariant.DoesNotExist:
             return None
 

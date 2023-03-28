@@ -106,13 +106,23 @@ def brand(request, slug):
 def shop(request):
     """Shop page."""
     # Products
-    products = Product.objects.filter(is_active=True)
+    match request.GET.get('sort'):
+        case 'price_asc':
+            products = Product.objects.filter(is_active=True).order_by('variants__price')
+        case 'price_desc':
+            products = Product.objects.filter(is_active=True).order_by('-variants__price')
+        case 'latest':
+            products = Product.objects.filter(is_active=True).order_by('-created_at')
+        case _:
+            # get sale products
+            products = Product.objects.filter(is_active=True).order_by('variants__sale_price')
+
     if request.GET.get('category'): # filter by category slug in url query="slug1+slug2+..."
         slugs = request.GET.get('category').split(' ')
         products = products.filter(category__slug__in=slugs)
     if request.GET.get('brand'):
         slugs = request.GET.get('brand').split(' ')
-        products = products.filter(brand__slug__in=slugsd)
+        products = products.filter(brand__slug__in=slugs)
     if request.GET.get('price'):
         prices = request.GET.get('price').split('-')
         products = products.filter(variants__price__gte=prices[0], variants__price__lte=prices[1])
