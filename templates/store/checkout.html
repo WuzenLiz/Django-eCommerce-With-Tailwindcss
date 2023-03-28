@@ -30,89 +30,13 @@
 <!---->
 {% block content %}
 <div class="container grid grid-cols-12 items-start gap-6 pt-4 pb-16 mx-auto">
+  <div class="col-span-12 text-center">
+    <h1 class="text-3xl font-bold text-gray-600">Thanh Toán</h1>
+  </div>
   <div class="col-span-12 lg:col-span-8">
     <!-- Cart infor mation-->
     {% for item in cart_items %}
-    <div class="flex flex-col mb-8">
-      <div class="flex flex-col lg:flex-row">
-        <div class="flex flex-col w-full lg:w-1/2">
-          <div class="flex flex-col lg:flex-row">
-            <div class="w-36 h-36">
-              <img
-                class="object-cover w-full h-full"
-                src="{{ item.product.product_image }}"
-                alt="{{ item.product.product_name }}"
-              />
-            </div>
-            <div class="flex flex-col justify-between w-full lg:pl-4">
-              <div class="flex flex-col">
-                <h2 class="text-xl font-bold text-gray-600">
-                  {{ item.product.product_name }}
-                </h2>
-              </div>
-              <div class="flex flex-row justify-between mt-2">
-                <div class="flex flex-row">
-                  <span class="text-sm text-gray-600">Số lượng:</span>
-                  <form method="post" action="{% url 'update_cart' item.id %}">
-                    {% csrf_token %}
-                    <div class="flex flex-row items-center">
-                      <input
-                        type="number"
-                        name="quantity"
-                        value="{{ item.quantity }}"
-                        class="w-16 px-2 text-center border border-gray-300 rounded"
-                      />
-                      <button class="px-2 text-white bg-primary">
-                        Cập nhật
-                      </button>
-                    </div>
-                  </form>
-                </div>
-                <div class="flex flex-row">
-                  <span class="text-sm text-gray-600">Giá:</span>
-                  <span class="text-xl font-bold text-gray-600">
-                    {{ item.price | intcomma }} đ
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col w-full lg:w-1/2">
-          <div class="flex flex-col justify-between mt-4 lg:mt-0">
-            <div class="flex flex-row justify-between">
-              <div class="flex flex-row">
-                <span class="text-sm text-gray-600">Tổng giá:</span>
-                <span class="text-xl font-bold text-gray-600">
-                  {{ item.get_total_price | intcomma }} đ
-                </span>
-              </div>
-              <div class="flex flex-row">
-                <span class="text-sm text-gray-600">Tổng giảm giá:</span>
-                <span class="text-xl font-bold text-gray-600">
-                  {{ item.get_total_discount | intcomma }} đ
-                </span>
-              </div>
-            </div>
-            <div class="flex flex-row justify-between">
-              <div class="flex flex-row">
-                <span class="text-sm text-gray-600"
-                  >Tổng giá sau giảm giá:</span
-                >
-                <span class="text-xl font-bold text-gray-600">
-                  {{ item.get_total_price_after_discount | intcomma }} đ
-                </span>
-              </div>
-              <div class="flex flex-row">
-                <span class="text-sm text-gray-600">Tổng giá sau thuế:</span>
-                <span class="text-xl font-bold text-gray-600">
-                  {{ item.get_total_price_after_tax | intcomma }} đ
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div>
     </div>
     {% endfor %}
   </div>

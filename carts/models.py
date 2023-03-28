@@ -35,6 +35,10 @@ class CartItem(models.Model):
     @property
     def cost(self):
         return self.product.price * self.quantity
+    
+    @property
+    def total_item(self):
+        return self.count() * self.quantity
 
     def __str__(self):
         return self.product

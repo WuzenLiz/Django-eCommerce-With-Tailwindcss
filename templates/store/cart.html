@@ -69,10 +69,15 @@
     <div class="w-full py-4">
       <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
         <div class="flex justify-end">
-        <a href="{% url 'checkout' %}"
-            class="btn btn-primary">
-          Thanh toán
+        {% if carts.total_item > 0 %}
+          <a href="{% url 'checkout' %}" class="btn btn-primary">
+            Thanh toán
           </a>
+        {% else %}
+          <a href="{% url 'shop' %}" class="btn btn-primary">
+            Tiếp tục mua hàng
+          </a>
+        {% endif %}
         </div>
       </div>
     </div>
