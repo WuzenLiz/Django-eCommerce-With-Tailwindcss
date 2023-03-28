@@ -12,4 +12,4 @@ def currency(value):
   # to vietnamese currency
   if value == 0:
     return 'Liên hệ'
-  return number_format(value, decimal_pos=0, use_l10n=True, force_grouping=True) + 'D'
+  return number_format(value, decimal_pos=0, use_l10n=True, force_grouping=True) + 'Đ'

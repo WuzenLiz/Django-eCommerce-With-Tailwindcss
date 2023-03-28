@@ -1,47 +1,48 @@
-{% load static %}
+{% load static %} 
 {% load i18n %}
-
 {% for address in address_list %}
-    {% if address.is_default %}
-        <div class="address-item address-item-default">
-    {% else %}
-        <div class="address-item">
-    {% endif %}
+{% if address.is_default %}
+<div class="address-item address-item-default">
+{% else %}
+<div class="address-item">
+{% endif %}
     <div class="address-item-top">
-        <div class="address-item-top-left">
-            <div class="address-item-name">{{ address.receiver }}</div>
-            <div class="address-item-phone">{{ address.phone }}</div>
+      <div class="address-item-top-left">
+        <div class="address-item-name">{{ address.receiver }}</div>
+        <div class="address-item-phone">{{ address.phone }}</div>
+      </div>
+      <div class="address-item-top-right">
+        <div class="address-item-edit">
+          <a href="{% url 'address' %}?id={{ address.id }}">
+            <i class="fa fa-edit"></i>
+          </a>
         </div>
-        <div class="address-item-top-right">
-            <div class="address-item-edit">
-                <a href="{% url 'address' %}?id={{ address.id }}">
-                    <i class="fa fa-edit"></i>
-                </a>
-            </div>
-            <div class="address-item-delete">
-                <a href="{% url 'address' %}?id={{ address.id }}&action=delete">
-                    <i class="fa fa-trash"></i>
-                </a>
-            </div>
-            <div class="address-item-default">
-                <a href="{% url 'address' %}?id={{ address.id }}&action=default">
-                    {% if address.is_default %}
-                        <i class="fa fa-check"></i>
-                    {% else %}
-                        <i class="fa fa-circle"></i>
-                    {% endif %}
-                </a>
+        <div class="address-item-delete">
+          <a href="{% url 'address' %}?id={{ address.id }}&action=delete">
+            <i class="fa fa-trash"></i>
+          </a>
         </div>
-    </div>
-    <div class="address-item-bottom">
+        <div class="address-item-default">
+          <a href="{% url 'address' %}?id={{ address.id }}&action=default">
+            {% if address.is_default %}
+            <i class="fa fa-check"></i>
+            {% else %}
+            <i class="fa fa-circle"></i>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+      <div class="address-item-bottom">
         <div class="address-item-bottom-content">
-            {{ address.detail_address }}
+          {{ address.detail_address }}
         </div>
+      </div>
+      {% endfor %} {% comment %} Add more address {% endcomment %}
+      <div class="address-item address-item-add">
+        <a href="{% url 'address' %}">
+          <i class="fa fa-plus"></i>
+        </a>
+      </div>
     </div>
-{% endfor %}
-{% comment %} Add more address {% endcomment %}
-<div class="address-item address-item-add">
-    <a href="{% url 'address' %}">
-        <i class="fa fa-plus"></i>
-    </a>
+  </div>
 </div>

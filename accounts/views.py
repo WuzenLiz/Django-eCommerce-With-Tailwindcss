@@ -10,6 +10,7 @@ from django.views import View
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import FormMixin
 from django.conf import settings as sett
+from django.http import JsonResponse
 
 from carts.models import Cart, Order
 
@@ -18,7 +19,7 @@ from .models import userAddressBook as AddressBook
 
 
 # Create Auth views 
-def login_view(request):
+def login_view(request,next=None):
     if request.method == "POST":
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -27,15 +28,17 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                if next:
+                    return redirect(next)
                 return redirect("index")
             else:
                 messages = messages.error(
                     request,
                     _("Invalid username or password."),
                 )
-                return redirect("login", next=request.GET.get("next"),messages=messages)
+                return redirect("login", next=next,messages=messages)
     form = AuthenticationForm()
-    if request.GET.get("next"):
+    if next:
         messages.info(request, _("You must be logged in to access this page."))
     return render(
         request=request,
@@ -109,42 +112,50 @@ class AddressBookView(LoginRequiredMixin, View):
         }
         return render(self, 'accounts/profile/address.html', context)
 
-    def post(self, *args, **kwargs):
-        form = AddressForm(self.request.POST)
+    def create(self, *args, **kwargs):
+        form = AddressForm(self.POST)
+        user = self.user
         if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user = self.request.user
-            instance.save()
-            messages.success(self.request, "Address added successfully")
-            return redirect("address")
-        context = {
-            'form': form,
-            'address': AddressBook.objects.filter(user=self.request.user),
-        }
-        return render(self.request, 'accounts/profile/address.html', context)
-    
+            address = form.save(commit=False)
+            address.user = user
+            address.save()
+            messages.success(self, "Address added successfully")
+            return redirect('address')
+        messages.error(self, "Address added failed")
+        return render(request, 'accounts/profile/address.html', {'form': form})
+
     def delete(self, *args, **kwargs):
-        id = json.loads(self.request.body)['id']
-        address = AddressBook.objects.get(id=id)
-        address.delete()
-        messages.success(self.request, "Address deleted successfully")
-        return JsonResponse('Item was added', safe=False)
+        id = kwargs.get('id')
+        if id:
+            address = AddressBook.objects.get(id=id)
+            address.delete()
+            messages.success(self, "Address deleted successfully")
+            return redirect(to='address')
+        messages.error(self, "Address deleted failed! No id found")
+        return redirect(to='address')
+        
     
     def set_default(self, *args, **kwargs):
-        id = json.loads(self.request.body)['id']
-        address = AddressBook.objects.get(id=id)
-        address.is_main_address = True
-        address.save()
-        messages.success(self.request, "Address set as default")
-        return JsonResponse('Item was added', safe=False)
+        id = kwargs.get('id')
+        if id:
+            address = AddressBook.objects.get(id=id)
+            address.is_main_address = True
+            address.save()
+            messages.success(self, "Address set as default")
+            return redirect(to='address')
+        messages.error(self, "Address set as default failed! No id found")
+        return redirect(to='address')
 
     def update(self, *args, **kwargs):
-        id = json.loads(self.request.body)['id']
-        address = AddressBook.objects.get(id=id)
-        form = AddressForm(self.request.POST, instance=address)
-        if form.is_valid():
-            form.save()
-            messages.success(self.request, "Address updated successfully")
-            return JsonResponse('Item was added', safe=False)
-        messages.error(self.request, "Address updated failed")
-        return JsonResponse('Item was added', safe=False)
+        id = kwargs.get('id')
+        if id:
+            address = AddressBook.objects.get(id=id)
+            form = AddressForm(self.POST, instance=address)
+            if form.is_valid():
+                form.save()
+                messages.success(self, "Address updated successfully")
+                return redirect(to='address')
+            messages.error(self, "Address updated failed")
+            redirect(to='address')
+        messages.error(self, "Address updated failed! No id found")
+        return redirect(to='address')

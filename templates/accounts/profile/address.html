@@ -1,36 +1,89 @@
 {% extends './Account_base.html' %}
-
+<!---->
 {% block title %}Sổ địa chỉ{% endblock %}
-
+<!---->
 {% block Account_Content %}
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title">Sổ địa chỉ</h3>
+<div class="box col-span-9">
+  <div class="box-header">
+    <h2 class="box-title">Sổ địa chỉ</h2>
+  </div>
+  <div class="box-body grid grid-cols-3 gap-3">
+    {% for item in address %}
+    <div class="card bg-slate-200 shadow-xl card-bordered">
+      <div class="card-body text-gray-700">
+        <h2 class="card-title text-gray-900">{{ item.receiver_name }}</h2>
+        <p>SDT: {{ item.phone }}</p>
+        <p class='text-lg'>Địa chỉ:</p>
+        <pre class='overflow-auto break-words text-lg'>{{ item.address }}</pre>
+        <div class="flex justify-end">
+          <a href="{% url 'edit_address' item.id %}" class="btn btn-primary"
+            >Sửa</a
+          >
+          <div class="divider divider-horizontal"></div>
+          <a href="{% url 'delete_address' item.id %}" class="btn btn-danger"
+            >Xóa</a
+          >
+        </div>
+      </div>
     </div>
-    <div class="box-body">
-        <table id="addressTable" class="table table-bordered table-striped  w-full">
-            <thead>
-                <tr>
-                    <th>Tên</th>
-                    <th>Địa chỉ</th>
-                    <th>Điện thoại</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in address %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.address }}</td>
-                    <td>{{ item.phone }}</td>
-                    <td>
-                        <a href="{% url 'update_address' id=item.id %}" class="btn btn-primary btn-sm">Sửa</a>
-                        <a href="{% url 'delete_address' id=item.id %}" class="btn btn-danger btn-sm">Xóa</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    {% endfor %}
+    <div class="card w-64 bg-slate-200 shadow-xl card-bordered h-64 add_card">
+      <div class="card-body text-center justify-center">
+        <label for="addressmd" class="btn">Thêm địa chỉ</label>
+      </div>
     </div>
+  </div>
+</div>
+<input type="checkbox" id="addressmd" class="modal-toggle" />
+<div class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">Thêm địa chỉ</h3>
+    {% comment %} Tailwindcss Form add address {% endcomment %}
+    <form
+      action="{% url 'add_address' %}"
+      class="form-Add_address"
+      method="POST"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="user" value="{{ user }}" />
+
+      <input
+        type="text"
+        id="receiver_name"
+        name="receiver_name"
+        placeholder="Tên người nhận"
+        class="input input-bordered w-full mt-2"
+      />
+      <input
+        type="text"
+        id="phone"
+        name="phone"
+        placeholder="Số điện thoại"
+        class="input input-bordered w-full mt-2"
+      />
+      <input
+        type="text"
+        id="address"
+        name="address"
+        placeholder="Địa chỉ"
+        class="input input-bordered w-full mt-2"
+      />
+      <label for="is_main_address" class="label mt-2"
+        >Đặt làm địa chỉ mặc định</label
+      >
+      <input
+        type="checkbox"
+        id="is_main_address"
+        name="is_main_address"
+        class="input input-bordered w-5 mt-2"
+      />
+      <div class="modal-action">
+        <button type='submit' class="btn btn-primary save-address-btn">
+            Lưu
+        </button>
+        <label for="addressmd" class="btn">Đóng</label>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock Account_Content %}

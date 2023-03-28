@@ -253,3 +253,5 @@ CART_SESSION_ID = config('CART_SESSION_ID',default='cart',cast=str)
 EMAIL_MASTER = config('EMAIL_MASTER',default=f'noreply@{BASE_URL}',cast=str)
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+
+PAGINATE_BY = config('PAGINATE_BY',default=10,cast=int)

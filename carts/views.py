@@ -3,13 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
+from django.http import HttpResponse
 
 from accounts.models import userAddressBook as AddressBook
 from saleproduct.models import ProductVariants
 
 from .models import Cart, CartItem, Order, OrderProduct
 from saleproduct.models import ProductVariants
-
+import json
 # Create your views here.
 
 
@@ -19,7 +20,6 @@ def _cart_id(request):
         cart = request.session.create()
     return cart
 
-
 def add_cart(request): # AJAX
     if request.method == 'POST':
         user = request.user
@@ -27,33 +27,39 @@ def add_cart(request): # AJAX
         quantity = request.POST.get('quantity',1)
         cart = Cart.objects.get_or_create(cart_id=_cart_id(request))
         if user.is_authenticated:
-            product_list = list()
-            try:
-                product = ProductVariants.objects.get(sku=product_sku)
-                if product.stock >= int(quantity):
-                    product_list.append(product)
-                else:
-                    return json.dumps({'error': 'Out of stock'})
-            except ProductVariants.DoesNotExist:
-                pass
             is_exist = CartItem.objects.filter(
-                product__in=product_list, user=user).exists()
+                product__sku=product_sku, user=user).exists()
             if is_exist:
                 cart_item = CartItem.objects.get(
-                    product__in=product_list, user=user)
+                    product__sku=product_sku, user=user)
                 cart_item.quantity += int(quantity)
                 cart_item.save()
             else:
+                product=ProductVariants.objects.get(sku=product_sku)
                 cart_item = CartItem.objects.create(
                     product=product, quantity=quantity, user=user, cart=cart[0])
                 cart_item.save()
             messages.success(request, 'Product added to cart')
-            return redirect(to=request.META.get('HTTP_REFERER'))
+            context={
+                'itemincart':CartItem.objects.filter(user=user).count(),
+                'message':'Product added to cart',
+                'code':'success'
+            }
+            return HttpResponse(json.dumps(context), content_type='application/json')
         else:
-            redirect(to='login', next=request.path)
+            messages.error(request, 'You must login to add product to cart')
+            context = {
+                'message': 'You must login to add product to cart',
+                'code': 'error'
+            }
+            return  HttpResponse(json.dumps(context), content_type='application/json')
     else:
-        return redirect(to=request.META.get('HTTP_REFERER'))
-       
+        messages.error(request, 'Method not allowed')
+        context = {
+            'message': 'Method not allowed',
+            'code': 'error'
+        }
+        return HttpResponse(json.dumps(context), content_type='application/json')
 
 def cart(request, total=0, quantity=0, cart_items=None):
     try:
@@ -117,6 +123,38 @@ def remove_cart_item(request, product_id, cart_item_id):
         pass
     return redirect('cart')
 
+def update_cart(request,item_id):
+    if request.method == 'POST':
+        user = request.user
+        product_sku = request.POST.get('product_sku')
+        quantity = request.POST.get('quantity',1)
+        cart = Cart.objects.get_or_create(cart_id=_cart_id(request))
+        if user.is_authenticated:
+            cart_item = CartItem.objects.get(
+                product__sku=product_sku, user=user)
+            cart_item.quantity = int(quantity)
+            cart_item.save()
+            context={
+                'itemincart':CartItem.objects.filter(user=user).count(),
+                'message':'Product added to cart',
+                'code':'success'
+            }
+            return HttpResponse(json.dumps(context), content_type='application/json')
+        else:
+            messages.error(request, 'You must login to add product to cart')
+            context = {
+                'message': 'You must login to add product to cart',
+                'code': 'error'
+            }
+            return  HttpResponse(json.dumps(context), content_type='application/json')
+    else:
+        messages.error(request, 'Method not allowed')
+        context = {
+            'message': 'Method not allowed',
+            'code': 'error'
+        }
+        return HttpResponse(json.dumps(context), content_type='application/json')
+
 @login_required(login_url='login', redirect_field_name='next')
 def checkout(request, total=0, quantity=0, cart_items=None):
     try:
@@ -135,8 +173,8 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         grand_total = total + tax
         if request.user.is_authenticated:
             try:
-                address = AddressBook.objects.get(
-                    user=request.user, is_main_address=True)
+                address = AddressBook.objects.filter(
+                    user=request.user).all()
             except AddressBook.DoesNotExist:
                 address = None
     except ObjectDoesNotExist:

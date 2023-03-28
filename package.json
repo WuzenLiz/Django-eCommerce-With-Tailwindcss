@@ -4,6 +4,7 @@
   "build": "postcss ./scr/css/main.css -o ./static/css/tailwind-output.css"
  },
  "dependencies": {
+  "@tailwindcss/forms": "^0.5.3",
   "chokidar": "^3.5.3",
   "daisyui": "^2.51.0"
  },

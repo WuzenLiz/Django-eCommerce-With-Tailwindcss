@@ -45,7 +45,7 @@ Shop
             </div>
         </div> {% endcomment %}
     </div>
-    <div class="grid grid-cols-3 gap-6">
+    <div class="grid grid-cols-3 gap-6 product-list">
       {% for item in Products %}
       <div class="bg-white shadow rounded overflow-hidden group flex flex-col justify-between" data-p-category='{{ item.category }}' data-p-brand='{{ item.brand }}'>
           <div class="relative">
@@ -86,7 +86,7 @@ Shop
                   <div class="text-xs text-gray-500 ml-3">(150)</div>
               </div>
           </div>
-          <a href="javascript:void(0)" data-p-id="{{ item.sku }}" data-p-quantity="1" data-url="{% url 'add_cart' %}" data-csrf-token="{{ csrf_token }}"
+          <a href="javascript:void(0)" data-p-id="{{ item.sku }}" data-p-quantity="1" data-url="{% url 'add_cart' %}"
               class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition add-to-cart">Thêm vào giỏ hàng</a>
       </div>
       {% endfor %}

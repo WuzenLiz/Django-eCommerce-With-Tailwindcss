@@ -17,7 +17,7 @@ $(document).ready(function () {
     $('.add-to-cart').click(function () {
         var product_sku = $(this).data('p-id');
         var product_Quantity = $(this).data('p-quantity');
-        var csrf_token = $(this).data('csrf-token');
+        const csrftoken = Cookies.get('csrftoken');
 
         $.ajax({
             type: 'POST',
@@ -25,15 +25,51 @@ $(document).ready(function () {
             data: {
                 product_sku: product_sku,
                 quantity: product_Quantity,
-                csrfmiddlewaretoken: csrf_token
+                csrfmiddlewaretoken: csrftoken
             },
             success: function (data) {
-                console.log(data);
-                if (data.success) {
-                    var itemincart = $('.item-in-cart').data('itemincart');
-                    $('.item-in-cart').html(itemincart + 1);
-                }
+                location.reload();
             }
         });
     });
+});
+function category_filter() {
+    var category = '';
+    $.each($('.category_checkbox:checked'), function () {
+        category += $(this).data('slug') + '+';
+    });
+    if (category == '') {
+        return '';
+    }
+    return '&category=' + category;
+}
+function brand_filter() {
+    var brand = '';
+    $.each($('.brand-checkbox:checked'), function () {
+        brand += $(this).data('slug') + '+';
+    });
+    if (brand == '') {
+        return '';
+    }
+    return '&brand=' + brand;
+}
+function price_filter() {
+    var min_price = $('.price#min').val();
+    var max_price = $('.price#max').val();
+    if (min_price == '' && max_price == '') {
+        return '';
+    }
+    return '&price=' + min_price + '-' + max_price;
+}
+
+
+// redirect to filter url
+$('.category_checkbox').change(function () {
+    document.location.href = '?' + category_filter() + brand_filter() + price_filter();
+});
+$('.brand-checkbox').change(function () {
+    document.location.href = '?' + category_filter() + brand_filter() + price_filter();
+});
+$('.price').change(function () {
+    document.location.href = '?' + category_filter() + brand_filter() + price_filter();
 });

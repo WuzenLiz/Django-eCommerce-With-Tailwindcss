@@ -22,7 +22,7 @@ class HomeBannerContent(models.Model):
         verbose_name_plural = "Home Banner Contents"
 
     def __str__(self):
-        return self.title
+        return self.title or ""
 
 
 class Category(models.Model):
@@ -255,6 +255,7 @@ class ProductVariants(models.Model):
     quantity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    variantImage = models.ImageField(upload_to="res/image/variants", blank=True, null=True)
 
     is_main = models.BooleanField(default=False)
 
@@ -283,6 +284,10 @@ class ProductVariants(models.Model):
     @property
     def product_name(self):
         return self.product.name + "-" + self.name
+    
+    @property
+    def product_image(self):
+        return self.variantImage
 
     def save(self):
         if self.is_main:

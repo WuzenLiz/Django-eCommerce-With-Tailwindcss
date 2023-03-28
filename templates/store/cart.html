@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 <!---->
-{% load static i18n %}
+{% load static i18n humanize %}
 {% load product_lib %}
 <!---->
 {% block title_suffix %}Giỏ hàng{% endblock title_suffix %}
@@ -40,11 +40,11 @@
       <tbody>
         {% for item in carts %}
         <tr>
-        <td class="border px-4 py-2">{{ item.product.product_name }}</td>
-        <td class="border px-4 py-2">{{ item.product.price|currency }}</td>
-        <td class="border px-4 py-2">{{ item.quantity }}</td>
-        <td class="border px-4 py-2">{{ item.cost|currency }}Đ</td>
-        <td class="border px-4 py-2">
+        <td class="border px-4 py-2 text-center">{{ item.product.product_name }}</td>
+        <td class="border px-4 py-2 text-center">{{ item.product.price|floatformat:0|intcomma }}</td>
+        <td class="border px-4 py-2 text-center">{{ item.quantity }}</td>
+        <td class="border px-4 py-2 text-center">{{ item.cost|floatformat:0|intcomma }}</td>
+        <td class="border px-4 py-2 text-center">
           <a href="{% url 'remove_cart_item' product_id=item.product.id  cart_item_id=item.id %}"
             class="btn btn-danger btn-sm">
           <i class="fa-solid fa-trash"></i>
@@ -61,7 +61,7 @@
       <div class="flex justify-end">
       <div class="flex flex-col">
         <span class="font-semibold">Tổng tiền</span>
-        <span class="text-3xl font-semibold">{{ grand_total|floatformat:0|default:0 }}Đơn</span>
+        <span class="text-3xl font-semibold">{{ grand_total|floatformat:0|default:0 }} VNĐ</span>
       </div>
       </div>
     </div>

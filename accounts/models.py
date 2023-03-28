@@ -89,17 +89,9 @@ class userAddressBook(models.Model):
         return self.address
 
     def save(self, *args, **kwargs):
-        if userAddressBook.objects.filter(user=self.user).all().count() == 0 and self.is_main_address == False:
-            self.is_main_address = True
-        elif userAddressBook.objects.filter(user=self.user, is_main_address=True).all().count() == 1 and self.is_main_address == True:
-            userAddressBook.objects.filter(
-                user=self.user, is_main_address=True).update(is_main_address=False)
-        elif userAddressBook.objects.filter(user=self.user, is_main_address=True).all().count() == 0 and self.is_main_address == False:
-            self.is_main_address = True
-        else:
-            pass
-        if self.receiver_name == None:
-            self.receiver_name = self.user.userinfomation.full_name
+        if self.is_main_address == True:
+            userAddressBook.objects.filter(user=self.user).update(
+                is_main_address=False)
         else:
             pass
         super(userAddressBook, self).save(*args, **kwargs)

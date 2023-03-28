@@ -64,16 +64,17 @@
                 </div>
             {% endblock message %}
         </div>
-
-        <!-- Footer -->
-        {% include "components/_footer.html" %}
-        <!-- End Footer -->
-
+        
         {# Global javascript #}
         {% include "corejs.html" %}
         
         {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
+        {# Override this in templates to add extra javascript #}
         {% endblock extra_js %}
+        
+        <!-- Footer -->
+        {% include "components/_footer.html" %}
+        <!-- End Footer -->
+        
     </body>
 </html>
