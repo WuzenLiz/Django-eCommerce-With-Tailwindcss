@@ -47,11 +47,16 @@ services:
     env_file: .env
 
   saleapp_build_res:
-    <<: *base
-    image: wuzen_sale_app
-    command: ["sh", "-c", "npm run build"]
+    build: 
+      context: .
+      dockerfile: Dockerfile_Node
+    image: wuzen_sale_app_build_res
+    platform: linux/amd64
     volumes:
       - .:/app
+      - node_modules:/app/node_modules
+    command: ["sh", "-c", "npm run build"]
+    
 
 
   db:
@@ -69,7 +74,7 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT}
     env_file: .env
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", 'Wuzenliz', "-d", "postgres"]
+      test: ["CMD", "pg_isready", "-U", '${POSTGRES_USER}', "-d", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -78,4 +83,5 @@ volumes:
   pgdb:
   app:
   pip38:
+  node_modules:
   # redis:

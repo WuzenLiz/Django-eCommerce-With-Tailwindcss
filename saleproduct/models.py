@@ -199,6 +199,12 @@ class Product(models.Model):
         except ProductVariant.DoesNotExist:
             return None
 
+    def variants_image(self):
+        try:
+            return self.variants.filter(is_active=True).images.filter(is_active=True)
+        except ProductVariant.DoesNotExist:
+            return None
+
     def related_products(self):
         try:
             return self.categories.products.filter(is_active=True)

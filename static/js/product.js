@@ -6,6 +6,8 @@ $('.variant-selector').click(function() {
     var product_max_Quantity = input.data('quantity');
     var product_price = input.data('price');
     var product_sale_price = input.data('sale-price');
+    var img_variant = $('.image-catalogue img#img-' + product_sku).attr('src');
+    $('img.image-main-lg').attr('src', img_variant);
     $('.p-sku').html(product_sku);
     $('.p-quantity').attr('max', product_max_Quantity);
     if (product_sale_price) {
@@ -32,3 +34,8 @@ $('.p_sub-q').click(function() {
         $('.add-to-cart').attr('data-p-quantity', quantity);
     }
 }); 
+
+$('.image-catalogue img').click(function() {
+    var src = $(this).attr('src');
+    $('img.image-main-lg').attr('src', src);
+});

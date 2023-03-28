@@ -21,8 +21,8 @@
 <!-- product-detail -->
 <div class="container grid grid-cols-2 gap-6 mx-auto">
  <div>
-  <img src="{{ product.main_image.url }}" alt="product" class="object-cover aspect-auto w-full max-w-3xl " />
-  <div class="grid grid-cols-6 gap-4 mt-4">
+  <img src="{{ product.main_image.url }}" alt="product" class="object-cover aspect-[9/16] w-full max-w-lg image-main-lg" />
+  <div class="grid grid-cols-6 gap-4 mt-4 image-catalogue">
    <img src="{{ product.main_image.url }}" alt="product" class="object-cover h-16 w-full cursor-pointer border border-primary" />
    {% if product.images %}
    <!-- foreach  -->
@@ -33,6 +33,18 @@
      class="object-cover h-16 w-full max-w-xs cursor-pointer border border-primary" />
     {% endfor %}
     <!-- ./foreach -->
+    {% endif %}
+    <!-- foreach vatiants  -->
+    {% if product.variants %}
+        {% for item in product.variants.all %}
+            {% if item.image.url %}
+            <img
+            id="img-{{ item.sku }}"
+            src="{{ item.image.url }}"
+            alt="{{ product.name }}-i-{{ item.name }}"
+            class="object-cover h-16 w-full max-w-xs cursor-pointer border border-primary" />
+            {% endif %}
+        {% endfor %}
     {% endif %}
    </div>
   </div>

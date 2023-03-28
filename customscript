@@ -1,5 +1,0 @@
-python manage.py cities --import=country
-python manage.py cities --import=city
-python manage.py cities --import=region
-python manage.py cities --import=subregion
-python manage.py cities --import=district

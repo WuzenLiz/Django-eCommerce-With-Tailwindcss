@@ -1,5 +1,6 @@
-# Use an official Python runtime based on Debian 10 "buster" as a parent image.
-FROM python:3.8.1-slim-buster
+# Use an official Python runtime based on "bullseye" as a parent image.
+FROM python:3.11.2-slim-bullseye
+
 
 # Port used by this container to serve HTTP.
 EXPOSE 8000
@@ -18,7 +19,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
     build-essential \
     libpq-dev \
-    libmariadbclient-dev \
+    libmariadb-dev-compat \
     libjpeg62-turbo-dev \
     zlib1g-dev \
     libwebp-dev \
@@ -33,31 +34,6 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
 
 # # Install the application server.
 # RUN pip install "gunicorn==20.0.4"
-
-# Install nodejs
-## get nodejs version manager (nvm)
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-
-## install nodejs
-RUN . ~/.nvm/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
-
-## set nodejs as default
-RUN ln -s ~/.nvm/versions/node/v$NODE_VERSION/bin/node /usr/local/bin/node
-
-## set npm as default
-RUN ln -s ~/.nvm/versions/node/v$NODE_VERSION/bin/npm /usr/local/bin/npm
-
-## set npx as default
-RUN ln -s ~/.nvm/versions/node/v$NODE_VERSION/bin/npx /usr/local/bin/npx
-
-## set yarn as default
-RUN ln -s ~/.nvm/versions/node/v$NODE_VERSION/bin/yarn /usr/local/bin/yarn
-
-# Install node packages
-RUN npm install -g npm@latest
 
 # Install the project requirements.
 COPY requirements.txt /

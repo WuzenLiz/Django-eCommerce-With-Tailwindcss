@@ -1,0 +1,13 @@
+# Use an official Python runtime based on "bullseye" as a parent image.
+FROM node:current-bullseye-slim
+
+COPY package.json /
+COPY package-lock.json /
+
+# Use /app folder as a directory where the source code is stored.
+WORKDIR /app
+
+# Copy the source code of the project into the container.
+COPY . .
+
+
