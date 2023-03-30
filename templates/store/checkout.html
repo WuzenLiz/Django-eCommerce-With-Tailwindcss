@@ -170,17 +170,17 @@
       <div class="p-4">
         <form action="{% url 'order_create' %}" method="POST">
           {% csrf_token %}
-          <input
-            type="hidden"
-            name="total"
-            value="{{ cart_total|default:0|add:30000|floatformat:0 }}"
-          />
-          <input
-            type="hidden"
-            name="payment"
-            value="Thanh toán khi nhận hàng"
-          />
           <input type="hidden" name="cart_id" value="{{ cart_id }}" />
+          <input
+            type="hidden"
+            name="payment_method"
+            value="COD"
+          />
+          <input
+            type="hidden"
+            name="address_id"
+            value="{{ address.default_address.id }}"
+          />
           <button
             type="submit"
             class="w-full flex justify-center items-center bg-primary text-white rounded-lg py-3 px-4 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"

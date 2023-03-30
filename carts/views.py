@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from accounts.models import userAddressBook as AddressBook
 from saleproduct.models import ProductVariants
 
-from .forms import OrderForm, PaymentForm
+from .forms import OrderCreateForm, PaymentForm
 from .models import Cart, CartItem, Order, OrderItem, Payment_method, PayOrder
 from .vnpay import vnpay
 
@@ -189,6 +189,7 @@ def checkout(request):
     except ObjectDoesNotExist:
         pass
     context = {
+        'cart_id': _cart_id(request),
         'total': total,
         'cart_items': cart_items,
         'tax': tax,
@@ -199,14 +200,37 @@ def checkout(request):
     return render(request, 'store/checkout.html', context)
 
 def order_create(request):
-    return order_complete(request)
-
-def order_complete(request):
-    order_id = request.GET.get('order_id')
-    context = {
-        'order_code': order_id,
-    }
-    return render(request, 'store/order_complete.html', context)
+    if request.method == 'POST':
+        cart_id = request.POST.get('cart_id')
+        address_id = request.POST.get('address_id')
+        payment_method = request.POST.get('payment_method')
+        user = request.user
+        cart = Cart.objects.get(cart_id=cart_id)
+        address = AddressBook.objects.get(id=address_id)
+        order = Order.objects.create(
+            user=user,
+            address=address,
+            payment_method=payment_method,
+            total_amount=cart.total,
+            tax=cart.tax,
+            grand_total=cart.grand_total,
+            status='Order Received',
+        )
+        cart_items = CartItem.objects.filter(cart=cart)
+        for item in cart_items:
+            OrderProduct.objects.create(
+                order=order,
+                user=user,
+                product=item.product,
+                quantity=item.quantity,
+                product_price=item.product.price,
+                ordered=True,
+            )
+        CartItem.objects.filter(cart=cart).delete()
+        context = {
+            'order_code': order.id,
+        }
+        return render(request, 'store/order_complete.html', context)
 
 def order_history(request):
     if request.user.is_authenticated:
