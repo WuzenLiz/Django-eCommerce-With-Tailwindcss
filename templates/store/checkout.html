@@ -94,11 +94,11 @@
           <p class="text-base font-semibold text-gray-600">Tổng tiền</p>
           {% if total > 200000 %}
           <p class="text-base font-semibold text-gray-600">
-            {{ cart_total|floatformat:0 }} vnđ
+            {{ total|floatformat:0 }} vnđ
           </p>
           {% else %}
           <p class="text-base font-semibold text-gray-600">
-            {{ cart_total|default:0|add:30000|floatformat:0 }} vnđ
+            {{ total|default_if_none:0|add:30000|floatformat:0 }} vnđ
           </p>
           {% endif %}
         </div>

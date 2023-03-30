@@ -45,7 +45,7 @@ class CartItem(models.Model):
 
 Payment_method = (
     ('COD', 'Thanh toán khi nhận hàng'),
-    ('VNPAY', 'Thanh toán qua VNPAY'),
+    # ('VNPAY', 'Thanh toán qua VNPAY'),
 )
 
 class PayOrder(models.Model):
