@@ -8,6 +8,7 @@
     <h2 class="box-title">Sổ địa chỉ</h2>
   </div>
   <div class="box-body grid grid-cols-3 gap-3">
+    {% if main_address %}
     <div class="card bg-slate-200 shadow-xl card-bordered">
       <div class="card-body text-gray-700">
         <h2 class="card-title text-gray-900">{{ main_address.receiver_name }}</h2>
@@ -30,6 +31,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
     {% for item in address %}
     <div class="card bg-slate-200 shadow-xl card-bordered">
       <div class="card-body text-gray-700">
