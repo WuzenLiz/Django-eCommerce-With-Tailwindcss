@@ -39,3 +39,13 @@ $('.image-catalogue img').click(function() {
     var src = $(this).attr('src');
     $('img.image-main-lg').attr('src', src);
 });
+
+$(function() {
+    $('.image-catalogue img').each(function(e) {
+        // click every image after 10 second and repeat
+        setTimeout(function() {
+            $('.image-catalogue img').eq(e).trigger('click');
+        }, 10000 * e);
+
+    });
+});

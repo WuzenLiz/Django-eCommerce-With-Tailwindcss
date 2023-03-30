@@ -11,9 +11,7 @@ $(document).ready(function () {
         var category = $(this).val();
         sortProdiuctByCategory(category);
     });
-});
 
-$(document).ready(function () {
     $('.add-to-cart').click(function () {
         var product_sku = $(this).data('p-id');
         var product_Quantity = $(this).data('p-quantity');
@@ -33,6 +31,7 @@ $(document).ready(function () {
         });
     });
 });
+
 function category_filter() {
     var category = '';
     $.each($('.category_checkbox:checked'), function () {

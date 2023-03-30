@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+<!---->
+{% load static i18n humanize settings %}
+<!---->
+{% block title_suffix %}Giỏ hàng{% endblock title_suffix %}
+<!---->
+{% block breadcrumb %}
+<div class="py-5 pl-10 breadcrumbs z-[-1]">
+  <ul>
+    <li>
+      <a href="{% url 'index' %}" class="text-primary text-base">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'cart' %}" class="text-primary text-base">
+        <i class="fa-solid fa-shopping-cart"> </i>
+        <p class="text-base font-semibold">Giỏ hàng</p>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'cart' %}" class="text-primary text-base">
+        <i class="fa-solid fa-money-bill"></i>
+        <p class="text-base font-semibold ">Thanh Toán</p>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock breadcrumb %}
+<!---->
+{% block content %}
+<!--Thanh toan thanh cong card in center-->
+<div class="container mx-auto">
+    <div class="flex justify-center">
+        <div class="w-1/2 mt-10">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                    <h1 class="text-3xl text-center font-bold text-gray-700">Thanh toán thành công</h1>
+                </div>
+                <div class="mb-4">
+                    <p class="text-center text-gray-600">Cảm ơn bạn đã đặt hàng tại <span class="text-primary">{{ settings.SITE_NAME }}</span></p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-center text-gray-600">Đơn hàng của bạn sẽ được giao đến địa chỉ của bạn trong vòng 24h tới</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-center text-gray-600">Mã đơn hàng của bạn là: <span class="text-primary">{{ order_code }}</span></p>
+                </div>
+                <div class="mb-4">
+                    <a href="{% url 'index' %}" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Về trang chủ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

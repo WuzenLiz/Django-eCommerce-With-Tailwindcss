@@ -199,17 +199,12 @@ def checkout(request):
     return render(request, 'store/checkout.html', context)
 
 def order_create(request):
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            pass
+    return order_complete(request)
 
 def order_complete(request):
     order_id = request.GET.get('order_id')
-    payment_id = request.GET.get('payment_id')
     context = {
-        'order_id': order_id,
-        'payment_id': payment_id,
+        'order_code': order_id,
     }
     return render(request, 'store/order_complete.html', context)
 

@@ -19,35 +19,35 @@
 <!-- ./breadcrumb -->
 
 <!-- product-detail -->
-<div class="container grid grid-cols-2 gap-6 mx-auto">
-    <div class="grid grid-flow-row grid-rows-5 gap-2 content-between h-[550]">
+<div class="container grid grid-cols-2 gap-6 mx-auto pb-4">
+    <div class="grid grid-flow-row grid-rows-5 gap-2 content-between h-[550px] justify-center justify-items-center items-center">
         <div class="row-span-4">
-            <img src="{{ product.main_image.url }}" alt="product" class="object-cover aspect-[3/4] w-full max-w-lg image-main-lg" />
+            <img src="{{ product.main_image.url }}" alt="product" class="object-scale-down aspect-[3/5] w-full max-w-sm image-main-lg" />
         </div>
         <div class="row-span-1">
             <div class="grid grid-cols-6 gap-1 mt-4 image-catalogue">
                 <img src="{{ product.main_image.url }}" alt="product" class="object-cover h-24 w-24 cursor-pointer border border-primary aspect-square" />
                 {% if product.images %}
                 <!-- foreach  -->
-                    {% for item in product.images.all %}
-                    <img
-                    src="{{ item.image.url }}"
-                    alt="{{ product.name }}-i-{{ image.id }}"
-                    class="object-cover h-24 w-24 cursor-pointer border border-primary aspect-square" />
-                    {% endfor %}
+                {% for item in product.images.all %}
+                <img
+                src="{{ item.image.url }}"
+                alt="{{ product.name }}-i-{{ image.id }}"
+                class="object-cover h-24 w-24 cursor-pointer border border-primary aspect-square" />
+                {% endfor %}
                 <!-- ./foreach -->
                 {% endif %}
                 <!-- foreach vatiants  -->
                 {% if product.variants %}
-                    {% for item in product.variants.all %}
-                        {% if item.variant_image %}
-                        <img
-                        id="img-{{ item.sku }}"
-                        src="{{ item.variant_image.url }}"
-                        alt="{{ product.name }}-i-{{ item.name }}"
-                        class="object-cover h-24 w-24 cursor-pointer border border-primary" />
-                        {% endif %}
-                    {% endfor %}
+                {% for item in product.variants.all %}
+                {% if item.variant_image %}
+                <img
+                id="img-{{ item.sku }}"
+                src="{{ item.variant_image.url }}"
+                alt="{{ product.name }}-i-{{ item.name }}"
+                class="object-cover h-24 w-24 cursor-pointer border border-primary" />
+                {% endif %}
+                {% endfor %}
                 {% endif %}
             </div>
         </div>
@@ -151,48 +151,26 @@
 <!-- description -->
 <div class="container pb-16 mx-auto">
     <h3 class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-Bold text-3xl">Thông tin sản phẩm</h3>
-    <div class="w-3/5 pt-6">
-        <pre class="text-gray-600">{{ product.description }}</pre>
-        
+    <div class="w-3/5 pt-6 grid-cols-3 gap-2 grid-flow-col">
+        <div class="col-span-2">
+            <pre class="text-gray-600">{{ product.description }}</pre>
+        </div>
         {% if product.attributes.all %}
-        <h4 class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-Bold text-3xl mt-8">Thông số kỹ thuật</h4>
-        <table class="table-auto border-collapse w-full text-left text-gray-600 text-sm mt-6">
-            {% for attr in product.attributes.all %}
-            <tr>
-                <th class="py-2 px-4 border border-gray-300 w-40 font-medium">{{ attr.name }}</th>
-                <th class="py-2 px-4 border border-gray-300 ">{{ attr.value }}</th>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="col-span-1 border-l border-gray-200 ">
+            <h4 class="font-roboto text-gray-800 pb-3 font-Bold text-3xl mt-8">Thông tin sản phẩm</h4>
+            <table class="table-auto border-collapse w-full text-left text-gray-600 text-sm mt-6">
+                {% for attr in product.attributes.all %}
+                <tr>
+                    <th class="py-2 px-4 border border-gray-300 w-40 font-medium">{{ attr.name }}</th>
+                    <th class="py-2 px-4 border border-gray-300 ">{{ attr.value }}</th>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
         {% endif %}
     </div>
 </div>
 <!-- ./description -->
-{% comment %} <!-- related products -->
-<div class="container mx-auto">
-    <h3 class=" border-gray-200 font-roboto text-gray-800 pb-3 font-Bold text-3xl">Sản phẩm liên quan</h3>
-    <div class="grid grid-cols-4 gap-4 mt-6 ">
-        {% for item in RelatedProducts %}
-        <a href="{% url 'product_detail' item.slug %}">
-            <div class="card card-side w-full max-h-52 min-h-max bg-gray-300 shadow-xl">
-                <figure>
-                    <img src="{{ item.main_image.url }}" alt="{{ item.name }}" class='w-80 object-cover'>
-                </figure>
-                <div class="card-body prose">
-                    <h2 class="card-title">
-                        {{ item.name }}
-                    </h2>
-                    <p class="product-card__price">
-                        <span class="text-gray-600 font-semibold line-through">{{ item.price }}</span>
-                        <span class="text-primary font-semibold">{{ item.product.sale_price }}</span>
-                    </p>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-</div> {% endcomment %}
-
 {% endblock content %}
 {% block extra_js %}
   <script src="{% static 'js/product.js' %}"></script>
