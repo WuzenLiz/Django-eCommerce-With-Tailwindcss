@@ -114,6 +114,10 @@ class userAddressBook(models.Model):
             return self.objects.filter(user=self.user, is_main_address=True)
         except:
             return None
+    
+    @property
+    def first_item(self):
+        return self.objects.filter(user=self.user).first()
 
 class userInfomation(models.Model):
     user = models.OneToOneField(CustomUserAccount, on_delete=models.CASCADE)

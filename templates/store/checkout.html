@@ -108,20 +108,36 @@
     <div class="row-span-1 bg-white rounded-lg shadow-lg mt-1">
       <div class="p-4">
         <h3 class="text-xl font-bold text-gray-600">Địa chỉ giao hàng</h3>
-        <div
-          class="flex flex-col ml-4 {% if not address.default_address %}hidden{% endif %}"
-        >
-          <p class="text-base font-semibold text-gray-600">
-            Người nhận: {{ address.default_address.receiver_name }}
-          </p>
-          <p class="text-base font-semibold text-gray-600">
-            SĐT: {{ address.default_address.phone }}
-          </p>
-          <p
-            class="text-base font-semibold text-gray-600 overflow-auto break-before-auto"
-          >
-            Địa chỉ: {{ address.default_address.address }}
-          </p>
+        <div class="flex flex-col ml-4">
+          {% if address_list.default_address %}
+            <p class="text-base font-semibold text-gray-600">
+              Người nhận: {{ address.default_address.receiver_name }}
+            </p>
+            <p class="text-base font-semibold text-gray-600">
+              SĐT: {{ address.default_address.phone }}
+            </p>
+            <p
+              class="text-base font-semibold text-gray-600 overflow-auto break-before-auto"
+            >
+              Địa chỉ: {{ address.default_address.address }}
+            </p>
+          {% elif address.first_item %}
+            <p class="text-base font-semibold text-gray-600">
+              Người nhận: {{ address.first_item.receiver_name }}
+            </p>
+            <p class="text-base font-semibold text-gray-600">
+              SĐT: {{ address.first_item.phone }}
+            </p>
+            <p
+              class="text-base font-semibold text-gray-600 overflow-auto break-before-auto"
+            >
+              Địa chỉ: {{ address.first_item.address }}
+            </p>
+          {% else %}
+            <p class="text-base font-semibold text-gray-600">
+              Bạn chưa có địa chỉ giao hàng
+            </p>
+          {% endif %}
         </div>
       </div>
       <!-- select address -->
@@ -209,7 +225,7 @@
     </div>
     <div class="modal-body">
       <div class="flex flex-col">
-        {% for item in addresses %}
+        {% for item in address_list %}
         <div class="flex items-center mt-4">
           <input
             type="radio"
