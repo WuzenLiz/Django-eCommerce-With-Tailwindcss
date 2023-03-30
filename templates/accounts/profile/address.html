@@ -8,6 +8,28 @@
     <h2 class="box-title">Sổ địa chỉ</h2>
   </div>
   <div class="box-body grid grid-cols-3 gap-3">
+    <div class="card bg-slate-200 shadow-xl card-bordered">
+      <div class="card-body text-gray-700">
+        <h2 class="card-title text-gray-900">{{ main_address.receiver_name }}</h2>
+        <p>SDT: {{ main_address.phone }}</p>
+        <p class='text-lg'>Địa chỉ:</p>
+        <pre class='overflow-auto break-words text-lg'>{{ main_address.address }}</pre>
+        <div class="flex justify-end">
+          <a href="{% url 'edit_address' main_address.id %}" class="btn btn-primary btn-sm"
+            >Sửa</a
+          >
+          <div class="divider divider-horizontal"></div>
+          <a href="{% url 'delete_address' main_address.id %}" class="btn  btn-sm btn-danger"
+            >Xóa</a
+          >
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="flex justify-center">
+          <span class="badge badge-primary">Địa chỉ mặc định</span>
+        </div>
+      </div>
+    </div>
     {% for item in address %}
     <div class="card bg-slate-200 shadow-xl card-bordered">
       <div class="card-body text-gray-700">

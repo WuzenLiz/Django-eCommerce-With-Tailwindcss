@@ -71,9 +71,9 @@ Shop
                   </h4>
               </a>
               <div class="flex items-baseline mb-1 space-x-2">
-                <p class="text-xl text-primary font-semibold">{{ item.lowest_price|currency }}VND</p>
+                <p class="text-xl text-primary font-semibold">{{ item.lowest_price|floatformat:0 }}VND</p>
                 {% if item.lowest_price != item.highest_price %}
-                <p class="text-xl text-primary font-semibold">~{{ item.highest_price|currency }}VND</p>
+                <p class="text-xl text-primary font-semibold">{{ item.highest_price|floatformat:0 }}VND</p>
                 {% endif %}
               </div>
               <div class="items-center sm:hidden md:flex">

@@ -108,7 +108,8 @@ class AddressBookView(LoginRequiredMixin, View):
         user = self.user
         context = {
             'form': form,
-            'address': AddressBook.objects.filter(user=user),
+            'address': AddressBook.objects.filter(user=user).exclude(is_main_address=True),
+            'main_address': AddressBook.objects.filter(user=user, is_main_address=True).first(),
         }
         return render(self, 'accounts/profile/address.html', context)
 

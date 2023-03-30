@@ -91,7 +91,7 @@ class userAddressBook(models.Model):
     def save(self, *args, **kwargs):
         # User must have one main address
         if self.is_main_address == True:
-            userAddressBook.objects.filter(user=self.user).update(
+            userAddressBook.objects.filter(user=self.user,is_main_address=True).update(
                 is_main_address=False)
         # If user has no main address, set this address as main address
         elif userAddressBook.objects.filter(user=self.user, is_main_address=True).count() == 0:
