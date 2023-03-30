@@ -71,10 +71,10 @@ Shop
                   </h4>
               </a>
               <div class="flex items-baseline mb-1 space-x-2">
-                {% if item.lowest_price %}
+                {% if item.lowest_price and item.lowest_price != item.highest_price %}
                 <p class="text-xl text-primary font-semibold">{{ item.lowest_price|floatformat:0 }}VND ~ </p>
                 {% endif %}
-                {% if item.lowest_price != item.highest_price %}
+                {% if item.highest_price and item.lowest_price != item.highest_price %}
                 <p class="text-xl text-primary font-semibold">{{ item.highest_price|floatformat:0 }}VND</p>
                 {% endif %}
               </div>

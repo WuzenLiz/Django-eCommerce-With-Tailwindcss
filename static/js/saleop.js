@@ -83,3 +83,12 @@ $('.price').change(function () {
 $('.sort-Category').change(function () {
     document.location.href = '?' + category_filter() + brand_filter() + price_filter() + sort_filter();
 });
+
+$('.address_list_chosen input').change(function () {
+    $('.addr').find('.u_ship_info.hidden').removeClass('hidden');
+    $('.addr').find('.text-base.r_noti').addClass('hidden');
+    $('#r_name').val('Người nhận: '+$(this).data('name'));
+    $('#r_phone').val('Số điện thoại: '+$(this).data('phone'));
+    $('#r_address').val('Địa chỉ: '+$(this).data('address'));
+});
+    
