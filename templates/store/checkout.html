@@ -245,30 +245,32 @@
       <div class="flex flex-col">
         <div class="grid grid-flow-row grid-cols-3 gap-3 mt-4 address_list_chosen">
           {% for item in address_list %}
-          <input
-            type="radio"
-            name="address"
-            id="address-{{ item.id }}"
-            class="w-5 h-5 text-primary"
-            value="{{ item.id }}"
-            data-receiver_name="{{ item.receiver_name }}"
-            data-phone="{{ item.phone }}"
-            data-address="{{ item.address }}"
-          />
-          <label
-            for="address-{{ item.id }}"
-            class="ml-2 text-base font-semibold text-gray-600"
-          >
-            <h5 class="text-base font-semibold text-gray-600">
-              {{ item.receiver_name }}
-            </h5>
-            <p class="text-base font-semibold text-gray-600">
-              {{ item.phone }}
-            </p>
-            <p class="text-base font-semibold text-gray-600">
-              {{ item.address }}
-            </p>
-          </label>
+          <div class="flex items-center">
+            <input
+              type="radio"
+              name="address"
+              id="address-{{ item.id }}"
+              class="w-5 h-5 text-primary"
+              value="{{ item.id }}"
+              data-receiver_name="{{ item.receiver_name }}"
+              data-phone="{{ item.phone }}"
+              data-address="{{ item.address }}"
+            />
+            <label
+              for="address-{{ item.id }}"
+              class="ml-2 text-base font-semibold text-gray-600"
+            >
+              <h5 class="text-base font-semibold text-gray-600">
+                {{ item.receiver_name }}
+              </h5>
+              <p class="text-base font-semibold text-gray-600">
+                {{ item.phone }}
+              </p>
+              <p class="text-base font-semibold text-gray-600">
+                {{ item.address }}
+              </p>
+            </label>
+          </div>
           {% endfor %}
         </div>
       </div>
