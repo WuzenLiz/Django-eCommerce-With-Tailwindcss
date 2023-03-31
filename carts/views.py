@@ -11,7 +11,7 @@ from accounts.models import userAddressBook as AddressBook
 from saleproduct.models import ProductVariants
 
 from .forms import OrderCreateForm, PaymentForm
-from .models import Cart, CartItem, Order, OrderItem, Payment_method, PayOrder
+from .models import Cart, CartItem, Order, OrderItem, Payment_method, PayOrder, OrderProduct
 from .vnpay import vnpay
 
 # Create your views here.
