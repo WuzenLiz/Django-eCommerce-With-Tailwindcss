@@ -15,6 +15,14 @@ class Cart(models.Model):
     @property
     def total(self):
         return sum(item.cost for item in self.cartitem_set.all())
+    
+    @property
+    def tax(self):
+        return (self.total * 2) /100
+
+    @property
+    def grand_total(self):
+        return self.total + self.tax
 
     class Meta:
         db_table = 'cart'
