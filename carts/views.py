@@ -202,13 +202,18 @@ def checkout(request):
 def order_create(request):
     if request.method == 'POST':
         cart_id = request.POST.get('cart_id')
-        if not cart_id:
-            cart_id = _cart_id(request)
+        if cart_id:
+            cart = Cart.objects.get(cart_id=cart_id)
+        else:
+            cart = Cart.objects.get(cart_id=_cart_id(request))
         address_id = request.POST.get('address_id')
+        if address_id:
+            address = AddressBook.objects.get(id=address_id)
+        else:
+            address = AddressBook.objects.get(user=request.user).first()
         payment_method = request.POST.get('payment_method')
         user = request.user
-        cart = Cart.objects.get(cart_id=cart_id)
-        address = AddressBook.objects.get(id=address_id)
+        
         order = Order.objects.create(
             user=user,
             address=address,
