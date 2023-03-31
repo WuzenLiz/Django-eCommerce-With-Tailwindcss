@@ -87,8 +87,8 @@ $('.sort-Category').change(function () {
 $('.address_list_chosen input').click(function () {
     $('.addr').find('.u_ship_info.hidden').removeClass('hidden');
     $('.addr').find('.text-base.r_noti').addClass('hidden');
-    $('#r_name').val('Người nhận: '+$(this).data('name'));
-    $('#r_phone').val('Số điện thoại: '+$(this).data('phone'));
-    $('#r_address').val('Địa chỉ: '+$(this).data('address'));
+    $('#r_name').html('Người nhận: '+$(this).data('receiver_name'));
+    $('#r_phone').html('Số điện thoại: '+$(this).data('phone'));
+    $('#r_address').html('Địa chỉ: '+$(this).data('address'));
 });
     
