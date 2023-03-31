@@ -85,7 +85,7 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled'),
     )
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    payment = models.CharField(max_length=10, choices=Payment_method, default='COD')
+    payment = models.CharField(max_length=9000, choices=Payment_method, default='COD')
     receiver_address = models.ForeignKey(userAddressBook, on_delete=models.CASCADE, null=True, blank=True)
     order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
@@ -127,4 +127,3 @@ class OrderProduct(models.Model):
 
     class Meta:
         db_table = 'order_products'
-        
