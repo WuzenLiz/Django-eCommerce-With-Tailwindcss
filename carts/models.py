@@ -89,7 +89,7 @@ class Order(models.Model):
     receiver_address = models.ForeignKey(userAddressBook, on_delete=models.CASCADE, null=True, blank=True)
     order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
-    status = models.CharField(max_length=10, choices=STATUS, default='New')
+    status = models.CharField(max_length=100, choices=STATUS, default='New')
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
