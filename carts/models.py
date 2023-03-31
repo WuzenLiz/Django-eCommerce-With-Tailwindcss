@@ -11,6 +11,10 @@ class Cart(models.Model):
     @property
     def id(self):
         return self.cart_id
+    
+    @property
+    def total(self):
+        return sum(item.cost for item in self.cartitem_set.all())
 
     class Meta:
         db_table = 'cart'

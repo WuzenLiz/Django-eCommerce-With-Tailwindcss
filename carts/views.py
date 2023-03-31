@@ -210,7 +210,7 @@ def order_create(request):
         if address_id:
             address = AddressBook.objects.get(id=address_id)
         else:
-            address = AddressBook.objects.get(user=request.user).first()
+            address = AddressBook.objects.filter(user=request.user).first()
         payment_method = request.POST.get('payment_method')
         user = request.user
         
