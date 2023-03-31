@@ -171,7 +171,7 @@ def checkout(request):
         quantity = 0
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(
-                user=request.user,cart=_cart_id(request) , is_active=True)
+                user=request.user,cart_id=_cart_id(request) , is_active=True)
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
