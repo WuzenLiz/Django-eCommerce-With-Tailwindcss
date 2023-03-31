@@ -216,11 +216,9 @@ def order_create(request):
         
         order = Order.objects.create(
             user=user,
-            address=address,
-            payment_method=payment_method,
-            total_amount=cart.total,
-            tax=cart.tax,
-            grand_total=cart.grand_total,
+            receiver_address=address,
+            payment=payment_method,
+            order_total=cart.grand_total,
             status='Order Received',
         )
         cart_items = CartItem.objects.filter(cart=cart)
