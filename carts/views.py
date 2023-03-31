@@ -202,6 +202,8 @@ def checkout(request):
 def order_create(request):
     if request.method == 'POST':
         cart_id = request.POST.get('cart_id')
+        if not cart_id:
+            cart_id = _cart_id(request)
         address_id = request.POST.get('address_id')
         payment_method = request.POST.get('payment_method')
         user = request.user
