@@ -90,5 +90,7 @@ $('.address_list_chosen input').click(function () {
     $('#r_name').html('Người nhận: '+$(this).data('receiver_name'));
     $('#r_phone').html('Số điện thoại: '+$(this).data('phone'));
     $('#r_address').html('Địa chỉ: '+$(this).data('address'));
+    
+    $('.checkoutOrder#cko_address_id').val($(this).data('address'));
 });
     
