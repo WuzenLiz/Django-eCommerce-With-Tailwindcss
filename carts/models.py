@@ -11,6 +11,18 @@ class Cart(models.Model):
     @property
     def id(self):
         return self.cart_id
+    
+    @property
+    def total(self):
+        return sum(item.cost for item in self.cartitem_set.all())
+    
+    @property
+    def tax(self):
+        return (self.total * 2) /100
+
+    @property
+    def grand_total(self):
+        return self.total + self.tax
 
     class Meta:
         db_table = 'cart'
@@ -73,11 +85,11 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled'),
     )
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    payment = models.ForeignKey(PayOrder, on_delete=models.CASCADE)
+    payment = models.CharField(max_length=9000, choices=Payment_method, default='COD')
     receiver_address = models.ForeignKey(userAddressBook, on_delete=models.CASCADE, null=True, blank=True)
     order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
-    status = models.CharField(max_length=10, choices=STATUS, default='New')
+    status = models.CharField(max_length=100, choices=STATUS, default='New')
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -104,3 +116,14 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.product
+
+class OrderProduct(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductVariants, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    product_price = models.FloatField()
+    ordered = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'order_products'

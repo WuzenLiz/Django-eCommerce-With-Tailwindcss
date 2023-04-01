@@ -112,29 +112,29 @@
           {% if address_list.default_address %}
             <div class='u_ship_info'>
               <p class="text-base font-semibold text-gray-600" id="r_name">
-                Người nhận: {{ address.default_address.receiver_name }}
+                Người nhận: {{ address_list.default_address.receiver_name }}
               </p>
               <p class="text-base font-semibold text-gray-600" id="r_phone">
-                SĐT: {{ address.default_address.phone }}
+                SĐT: {{ address_list.default_address.phone }}
               </p>
               <p
                 class="text-base font-semibold text-gray-600 overflow-auto break-before-auto" id="r_address"
               >
-                Địa chỉ: {{ address.default_address.address }}
+                Địa chỉ: {{ address_list.default_address.address }}
               </p>
             </div>
-          {% elif address.first_item %}
+          {% elif address_list.first_item %}
             <div class='u_ship_info'>
               <p class="text-base font-semibold text-gray-600" id='r_name' >
-                Người nhận: {{ address.first_item.receiver_name }}
+                Người nhận: {{ address_list.first_item.receiver_name }}
               </p>
               <p class="text-base font-semibold text-gray-600" id="r_phone">
-                SĐT: {{ address.first_item.phone }}
+                SĐT: {{ address_list.first_item.phone }}
               </p>
               <p
                 class="text-base font-semibold text-gray-600 overflow-auto break-before-auto" id='r_address'
               >
-                Địa chỉ: {{ address.first_item.address }}
+                Địa chỉ: {{ address_list.first_item.address }}
               </p>
             </div>
           {% else %}
@@ -201,7 +201,7 @@
     <!-- Order button -->
     <div class="row-span-1 bg-transparent mt-4">
       <div class="p-4">
-        <form action="{% url 'order_create' %}" method="POST">
+        <form action="{% url 'order_create' %}" method="POST" class="checkoutOrder">
           {% csrf_token %}
           <input type="hidden" name="cart_id" value="{{ cart_id }}" />
           <input
@@ -212,6 +212,7 @@
           <input
             type="hidden"
             name="address_id"
+            id="cko_address_id"
             value="{{ address.default_address.id }}"
           />
           <button
@@ -242,32 +243,34 @@
     </div>
     <div class="modal-body">
       <div class="flex flex-col">
-        <div class="flex items-center mt-4 address_list_chosen">
+        <div class="grid grid-flow-row grid-cols-3 gap-3 mt-4 address_list_chosen">
           {% for item in address_list %}
-          <input
-            type="radio"
-            name="address"
-            id="address-{{ item.id }}"
-            class="w-5 h-5 text-primary"
-            value="{{ item.id }}"
-            data-receiver_name="{{ item.receiver_name }}"
-            data-phone="{{ item.phone }}"
-            data-address="{{ item.address }}"
-          />
-          <label
-            for="address-{{ item.id }}"
-            class="ml-2 text-base font-semibold text-gray-600"
-          >
-            <h5 class="text-base font-semibold text-gray-600">
-              {{ item.receiver_name }}
-            </h5>
-            <p class="text-base font-semibold text-gray-600">
-              {{ item.phone }}
-            </p>
-            <p class="text-base font-semibold text-gray-600">
-              {{ item.address }}
-            </p>
-          </label>
+          <div class="flex items-center">
+            <input
+              type="radio"
+              name="address"
+              id="address-{{ item.id }}"
+              class="w-5 h-5 text-primary"
+              value="{{ item.id }}"
+              data-receiver_name="{{ item.receiver_name }}"
+              data-phone="{{ item.phone }}"
+              data-address="{{ item.address }}"
+            />
+            <label
+              for="address-{{ item.id }}"
+              class="ml-2 text-base font-semibold text-gray-600"
+            >
+              <h5 class="text-base font-semibold text-gray-600">
+                {{ item.receiver_name }}
+              </h5>
+              <p class="text-base font-semibold text-gray-600">
+                {{ item.phone }}
+              </p>
+              <p class="text-base font-semibold text-gray-600">
+                {{ item.address }}
+              </p>
+            </label>
+          </div>
           {% endfor %}
         </div>
       </div>

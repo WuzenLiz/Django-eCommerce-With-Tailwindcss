@@ -11,7 +11,7 @@ from accounts.models import userAddressBook as AddressBook
 from saleproduct.models import ProductVariants
 
 from .forms import OrderCreateForm, PaymentForm
-from .models import Cart, CartItem, Order, OrderItem, Payment_method, PayOrder
+from .models import Cart, CartItem, Order, OrderItem, Payment_method, PayOrder, OrderProduct
 from .vnpay import vnpay
 
 # Create your views here.
@@ -169,12 +169,9 @@ def checkout(request):
         total = 0
         grand_total = 0
         quantity = 0
-        if request.user.is_authenticated:
-            cart_items = CartItem.objects.filter(
-                user=request.user, is_active=True)
-        else:
-            cart = Cart.objects.get(cart_id=_cart_id(request))
-            cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.filter(
+            user=request.user,cart=cart , is_active=True)
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
@@ -201,36 +198,42 @@ def checkout(request):
 
 def order_create(request):
     if request.method == 'POST':
-        cart_id = request.POST.get('cart_id')
-        address_id = request.POST.get('address_id')
-        payment_method = request.POST.get('payment_method')
-        user = request.user
-        cart = Cart.objects.get(cart_id=cart_id)
-        address = AddressBook.objects.get(id=address_id)
-        order = Order.objects.create(
-            user=user,
-            address=address,
-            payment_method=payment_method,
-            total_amount=cart.total,
-            tax=cart.tax,
-            grand_total=cart.grand_total,
-            status='Order Received',
-        )
-        cart_items = CartItem.objects.filter(cart=cart)
-        for item in cart_items:
-            OrderProduct.objects.create(
-                order=order,
+        with transaction.atomic():
+            cart_id = request.POST.get('cart_id')
+            if cart_id:
+                cart = Cart.objects.get(cart_id=cart_id)
+            else:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+            address_id = request.POST.get('address_id')
+            if address_id:
+                address = AddressBook.objects.get(id=address_id)
+            else:
+                address = AddressBook.objects.filter(user=request.user).first()
+            payment_method = request.POST.get('payment_method')
+            user = request.user
+            
+            order = Order.objects.create(
                 user=user,
-                product=item.product,
-                quantity=item.quantity,
-                product_price=item.product.price,
-                ordered=True,
+                receiver_address=address,
+                payment=payment_method,
+                order_total=cart.grand_total,
+                status='Order Received',
             )
-        CartItem.objects.filter(cart=cart).delete()
-        context = {
-            'order_code': order.id,
-        }
-        return render(request, 'store/order_complete.html', context)
+            cart_items = CartItem.objects.filter(cart=cart)
+            for item in cart_items:
+                OrderProduct.objects.create(
+                    order=order,
+                    user=user,
+                    product=item.product,
+                    quantity=item.quantity,
+                    product_price=item.product.price,
+                    ordered=True,
+                )
+            CartItem.objects.filter(cart=cart).delete()
+            context = {
+                'order_code': order.id,
+            }
+            return render(request, 'store/order_complete.html', context)
 
 def order_history(request):
     if request.user.is_authenticated:

@@ -85,11 +85,13 @@ $('.sort-Category').change(function () {
     document.location.href = '?' + category_filter() + brand_filter() + price_filter() + sort_filter();
 });
 
-$('.address_list_chosen input').change(function () {
+$('.address_list_chosen input').click(function () {
     $('.addr').find('.u_ship_info.hidden').removeClass('hidden');
     $('.addr').find('.text-base.r_noti').addClass('hidden');
-    $('#r_name').val('Người nhận: '+$(this).data('name'));
-    $('#r_phone').val('Số điện thoại: '+$(this).data('phone'));
-    $('#r_address').val('Địa chỉ: '+$(this).data('address'));
+    $('#r_name').html('Người nhận: '+$(this).data('receiver_name'));
+    $('#r_phone').html('Số điện thoại: '+$(this).data('phone'));
+    $('#r_address').html('Địa chỉ: '+$(this).data('address'));
+    
+    $('.checkoutOrder#cko_address_id').val($(this).data('address'));
 });
     

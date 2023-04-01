@@ -102,8 +102,8 @@ class Brand(models.Model):
 
     class Meta:
         ordering = ("name",)
-        verbose_name = "brand"
-        verbose_name_plural = "brands"
+        verbose_name = "Phân loại"
+        verbose_name_plural = "Phân loại"
 
     def __str__(self):
         return self.name
@@ -251,7 +251,7 @@ class ProductVariants(models.Model):
     quantity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    variant_image = models.ImageField(upload_to="res/image/variants", blank=True, null=True)
+    variant_image = models.ImageField(upload_to="res/image/variants", verbose_name="Ảnh sản phẩm",blank=True, null=True)
 
     is_main = models.BooleanField(default=False)
 
