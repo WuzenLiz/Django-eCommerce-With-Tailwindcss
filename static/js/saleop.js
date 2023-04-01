@@ -110,9 +110,8 @@ $('.cart-decrease').click(function () {
                 quantity: quantity,
                 csrfmiddlewaretoken: csrftoken
             },
-            success: function (data) {
-                $('#prod_' + sku).html(data);
-                $(this).parent().data('quantity', quantity);
+            success: function () {
+                location.reload();
             }
         });
     }
@@ -132,9 +131,8 @@ $('.cart-increase').click(function () {
             quantity: quantity,
             csrfmiddlewaretoken: csrftoken
         },
-        success: function (data) {
-            $('#prod_' + sku).html(data);
-            $(this).parent().data('quantity', quantity);
+        success: function () {
+           location.reload();
         }
     });
 
