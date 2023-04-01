@@ -45,12 +45,12 @@
         <td class="border px-4 py-2 text-center" data-quantity='{{ item.quantity }}' data-url='{% url 'update_cart' %}' data-item_id='{{ item.product.sku }}'>
           <div class="flex justify-center">
             <a href="javascript:void(0)"
-              class="btn btn-primary btn-sm cart-decrease">
+              class="btn btn-ghost btn-sm cart-decrease">
               <i class="fa-solid fa-minus"></i>
             </a>
             <span class="px-4 py-2" id='prod_{{ item.product.sku }}'>{{ item.quantity }}</span>
             <a href="javascript:void(0)"
-              class="btn btn-primary btn-sm cart-increase">
+              class="btn btn-ghost btn-sm cart-increase">
               <i class="fa-solid fa-plus"></i>
             </a>
           </div>
