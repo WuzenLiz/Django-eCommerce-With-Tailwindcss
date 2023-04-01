@@ -10,9 +10,9 @@
  <div
   class="bg-cover bg-no-repeat bg-center py-36 max-h-[40vw] "
   style="background-image: url({{ BannerContent.image.url }});">
-  <div class="container mx-auto px-5 lg:px-0">
-  <a href="{{ BannerContent.link|default_if_none:'javascript:void(0)' }}"></a>
- </div>
+   <div class="container mx-auto px-5 lg:px-0">
+      <a href="{{ BannerContent.link|default_if_none:'javascript:void(0)' }}"></a>
+   </div>
 </div>
 {% endif %}
 <!-- ./SEO banner -->
