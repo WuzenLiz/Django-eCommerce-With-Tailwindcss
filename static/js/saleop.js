@@ -93,4 +93,48 @@ $('.address_list_chosen input').click(function () {
     
     $('.checkoutOrder#cko_address_id').val($(this).data('address'));
 });
-    
+
+$('.cart-decrease').click(function () {
+    var quantity = $(this).parent().data('quantity');
+    var sku = $(this).parent().data('sku');
+    var url = $(this).parent().data('url');
+    const csrftoken = Cookies.get('csrftoken');
+    if (quantity > 1) {
+        quantity = parseInt(quantity) - 1;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                product_sku: sku,
+                quantity: quantity,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                $('#prod_' + sku).html(data);
+                $(this).parent().data('quantity', quantity);
+            }
+        });
+    }
+});
+
+$('.cart-increase').click(function () {
+    var quantity = $(this).parent().data('quantity');
+    var sku = $(this).parent().data('sku');
+    var url = $(this).parent().data('url');
+    const csrftoken = Cookies.get('csrftoken');
+    quantity = parseInt(quantity) + 1;
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            product_sku: sku,
+            quantity: quantity,
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            $('#prod_' + sku).html(data);
+            $(this).parent().data('quantity', quantity);
+        }
+    });
+
+});

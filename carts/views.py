@@ -131,30 +131,24 @@ def remove_cart_item(request, product_id, cart_item_id):
         pass
     return redirect('cart')
 
+@login_required()
 def update_cart(request,item_id):
     if request.method == 'POST':
         user = request.user
         product_sku = request.POST.get('product_sku')
         quantity = request.POST.get('quantity',1)
         cart = Cart.objects.get_or_create(cart_id=_cart_id(request))
-        if user.is_authenticated:
-            cart_item = CartItem.objects.get(
-                product__sku=product_sku, user=user)
-            cart_item.quantity = int(quantity)
-            cart_item.save()
-            context={
-                'itemincart':CartItem.objects.filter(user=user).count(),
-                'message':'Product added to cart',
-                'code':'success'
-            }
-            return HttpResponse(json.dumps(context), content_type='application/json')
-        else:
-            messages.error(request, 'You must login to add product to cart')
-            context = {
-                'message': 'You must login to add product to cart',
-                'code': 'error'
-            }
-            return  HttpResponse(json.dumps(context), content_type='application/json')
+        cart_item = CartItem.objects.get(
+            product__sku=product_sku, user=user)
+        cart_item.quantity = int(quantity)
+        cart_item.save()
+        context={
+            'itemincart':CartItem.objects.filter(user=user).count(),
+            'message':'Product added to cart',
+            'code':'success'
+        }
+        return HttpResponse(json.dumps(context), content_type='application/json')
+    
     else:
         messages.error(request, 'Method not allowed')
         context = {
@@ -437,4 +431,3 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-
