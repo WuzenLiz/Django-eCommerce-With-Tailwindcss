@@ -133,7 +133,7 @@ def remove_cart_item(request, product_id, cart_item_id):
     return redirect('cart')
 
 @login_required()
-def update_cart(request,item_id):
+def update_cart(request):
     if request.method == 'POST':
         user = request.user
         product_sku = request.POST.get('product_sku')
