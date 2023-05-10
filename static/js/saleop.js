@@ -30,6 +30,7 @@ $(document).ready(function () {
             }
         });
     });
+    $('.alert-message').delay(3000).fadeOut();
 });
 
 function category_filter() {

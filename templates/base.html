@@ -52,7 +52,7 @@
             {% block message %}
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} shadow-lg ">
+                        <div class="alert alert-{{ message.tags }} shadow-lg alert-message">
                             <div>
                                 <i class="fa-solid fa-xmark"></i>
                                 <span>{{ message }}</span>
