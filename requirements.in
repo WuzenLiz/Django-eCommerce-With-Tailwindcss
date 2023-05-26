@@ -47,7 +47,7 @@ soupsieve==2.4
 sqlparse==0.4.3
 tablib==3.3.0
 tomli==2.0.1
-tornado==6.2
+tornado==6.3.2
 urllib3==1.26.14
 wrapt==1.14.1
 xlrd==2.0.1
