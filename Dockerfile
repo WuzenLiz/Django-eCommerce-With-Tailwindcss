@@ -1,5 +1,5 @@
 # Use an official Python runtime based on "bullseye" as a parent image.
-FROM python:3.11.2-slim-bullseye
+FROM python:slim
 
 
 # Port used by this container to serve HTTP.
