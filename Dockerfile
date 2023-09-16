@@ -1,7 +1,6 @@
 # Use an official Python runtime based on "bullseye" as a parent image.
 FROM python:3.12.0rc1-slim-bullseye
 
-
 # Port used by this container to serve HTTP.
 EXPOSE 8000
 
