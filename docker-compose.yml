@@ -11,7 +11,7 @@ services:
     volumes:
       - .:/app
       - pip38:/usr/local/lib/python3.8/site-packages
-    command: ["sh", "-c", "npm isntall && pip install -r requirements.txt"]
+    command: ["sh", "-c", "npm install && pip install -r requirements.txt"]
 
   saleapp_migration:
     <<: *base
