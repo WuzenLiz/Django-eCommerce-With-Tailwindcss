@@ -93,7 +93,7 @@ idna==3.4
     # via
     #   -r requirements.in
     #   requests
-jwcrypto==1.4.2
+jwcrypto==1.5.6
     # via
     #   -r requirements.in
     #   django-oauth-toolkit
