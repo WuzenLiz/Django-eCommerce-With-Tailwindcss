@@ -85,7 +85,7 @@ et-xmlfile==1.1.0
     # via
     #   -r requirements.in
     #   openpyxl
-gunicorn==20.0.4
+gunicorn==22.0.0
     # via -r requirements.in
 heroicons==2.1.1
     # via -r requirements.in
