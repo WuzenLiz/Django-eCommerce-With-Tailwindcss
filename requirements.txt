@@ -51,7 +51,7 @@ diff-match-patch==20200713
     # via
     #   -r requirements.in
     #   django-import-export
-django==4.1.7
+django==4.2.16
     # via
     #   -r requirements.in
     #   django-filter
