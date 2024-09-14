@@ -5,7 +5,7 @@
  },
  "dependencies": {
   "@tailwindcss/forms": "^0.5.3",
-  "chokidar": "^3.5.3",
+  "chokidar": "^4.0.0",
   "daisyui": "^2.52.0"
  },
  "devDependencies": {
