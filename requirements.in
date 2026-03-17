@@ -11,6 +11,10 @@ Deprecated==1.2.13
 diff-match-patch==20200713
 Django==4.1.7
 django-filter==22.1
+django-debug-toolbar
+django-hitcount
+fontawesomefree
+pillow
 django-import-export==3.0.2
 django-livereload-server==0.4
 django-modelcluster==6.0

@@ -18,6 +18,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
     build-essential \
     libpq-dev \
+    libffi-dev \
     libmariadb-dev-compat \
     libjpeg62-turbo-dev \
     zlib1g-dev \

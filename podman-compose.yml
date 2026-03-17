@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+  base: &base
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: localhost/wuzen_sale_app
+    env_file: .env
+    volumes:
+      - .:/app
+
+  saleapp_migration:
+    <<: *base
+    command: ["sh", "-c", "python3 /app/manage.py makemigrations && python3 /app/manage.py migrate"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  saleapp:
+    <<: *base
+    restart: on-failure
+    command: ["sh", "-c", "python3 /app/manage.py runserver 0.0.0.0:8000"]
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+      saleapp_migration:
+        condition: service_completed_successfully
+
+
+  saleapp_build_res:
+    build:
+      context: .
+      dockerfile: Dockerfile_Node
+    image: localhost/wuzen_sale_app_build_res
+    volumes:
+      - .:/app:z
+      - node_modules:/app/node_modules
+    command: ["sh", "-c", "npm run build"]
+
+  db:
+    image: docker.io/library/postgres:16-alpine
+    restart: always
+    volumes:
+      - pgdb:/var/lib/postgresql/data
+    ports:
+      - "5433:5433"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdb:
+  node_modules:
