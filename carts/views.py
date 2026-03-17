@@ -258,10 +258,10 @@ def order_history(request):
 
 def order_detail(request, order_id):
     if request.user.is_authenticated:
-        order_detail = OrderProduct.objects.filter(
-            order_id=order_id
-        ).select_related('product', 'product__product')
         order = get_object_or_404(Order, id=order_id, user=request.user)
+        order_detail = OrderProduct.objects.filter(
+            order=order
+        ).select_related('product', 'product__product')
         context = {
             'order_detail': order_detail,
             'order': order,
