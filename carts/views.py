@@ -276,11 +276,11 @@ def order_cancel(request, order_id):
             order = get_object_or_404(Order, id=order_id, user=request.user)
             order.status = 'Cancelled'
             order.save()
-            return redirect('order_history')
+            return redirect('order')
         else:
             return redirect('login')
     else:
-        return redirect('order_history')
+        return redirect('order')
 
 # VNPay Payment
 def payment(request):
