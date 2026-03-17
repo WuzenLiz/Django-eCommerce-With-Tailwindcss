@@ -171,12 +171,14 @@ def update_cart(request):
 
 @login_required(login_url='login', redirect_field_name='next')
 def checkout(request):
+    # Initialize defaults so context can always be safely constructed
+    tax = 0
+    total = 0
+    grand_total = 0
+    quantity = 0
+    cart_items = CartItem.objects.none()
+    address = AddressBook.objects.none()
     try:
-        tax = 0
-        total = 0
-        grand_total = 0
-        quantity = 0
-        address = None
         cart = Cart.objects.get(cart_id=_cart_id(request))
         cart_items = CartItem.objects.filter(
             user=request.user, cart=cart, is_active=True
@@ -188,7 +190,8 @@ def checkout(request):
         grand_total = total + tax
         address = AddressBook.objects.filter(user=request.user)
     except ObjectDoesNotExist:
-        pass
+        # If cart or related objects do not exist, fall back to initialized defaults
+        logger.debug("Checkout requested with no existing cart for session %s", _cart_id(request))
     context = {
         'cart_id': _cart_id(request),
         'total': total,
