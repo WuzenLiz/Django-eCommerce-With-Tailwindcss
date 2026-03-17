@@ -244,9 +244,11 @@ def order_create(request):
 
 def order_history(request):
     if request.user.is_authenticated:
-        orders = Order.objects.filter(
-            user=request.user, status=request.GET.get('status', None)
-        ).order_by('-created_at').select_related('receiver_address')
+        status = request.GET.get('status')
+        orders = Order.objects.filter(user=request.user)
+        if status:
+            orders = orders.filter(status=status)
+        orders = orders.order_by('-created_at').select_related('receiver_address')
         context = {
             'orders': orders,
         }
