@@ -1,0 +1,137 @@
+{% extends '../accounts/profile/Account_base.html' %}
+{% load static i18n humanize %}
+
+{% block title_suffix %}Chi tiết đơn hàng #{{ order.id }}{% endblock title_suffix %}
+
+{% block Account_Content %}
+<div class="col-span-9 space-y-4">
+
+  <!-- Order Header -->
+  <div class="bg-white shadow rounded p-5 flex items-center justify-between flex-wrap gap-3">
+    <div>
+      <h2 class="text-xl font-bold text-gray-700">
+        <i class="fa-solid fa-receipt text-primary mr-2"></i>
+        Đơn hàng <span class="text-primary">#{{ order.id }}</span>
+      </h2>
+      <p class="text-sm text-gray-400 mt-1">
+        Đặt lúc: {{ order.created_at|date:"d/m/Y H:i" }}
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      {% if order.status == 'New' %}
+        <span class="badge badge-warning badge-lg">Mới</span>
+        <form action="{% url 'order_cancel' order.id %}" method="POST"
+              onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này?');">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-error btn-outline">
+            <i class="fa-solid fa-xmark mr-1"></i> Hủy đơn
+          </button>
+        </form>
+      {% elif order.status == 'Accepted' %}
+        <span class="badge badge-info badge-lg">Đã xác nhận</span>
+      {% elif order.status == 'Completed' %}
+        <span class="badge badge-success badge-lg">Hoàn thành</span>
+      {% elif order.status == 'Cancelled' %}
+        <span class="badge badge-error badge-lg">Đã hủy</span>
+      {% endif %}
+      <a href="{% url 'order' %}" class="btn btn-sm btn-outline">
+        <i class="fa-solid fa-arrow-left mr-1"></i> Quay lại
+      </a>
+    </div>
+  </div>
+
+  <!-- Delivery Info + Payment Method -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-white shadow rounded p-5">
+      <h3 class="font-bold text-gray-700 mb-3">
+        <i class="fa-solid fa-location-dot text-primary mr-2"></i>
+        Địa chỉ giao hàng
+      </h3>
+      {% if order.receiver_address %}
+      <div class="space-y-1 text-sm text-gray-600">
+        <p><span class="font-medium">Người nhận:</span> {{ order.receiver_address.receiver_name }}</p>
+        <p><span class="font-medium">SĐT:</span> {{ order.receiver_address.phone }}</p>
+        <p><span class="font-medium">Địa chỉ:</span> {{ order.receiver_address.address }}</p>
+      </div>
+      {% else %}
+      <p class="text-sm text-gray-400">Không có thông tin địa chỉ.</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-white shadow rounded p-5">
+      <h3 class="font-bold text-gray-700 mb-3">
+        <i class="fa-solid fa-credit-card text-primary mr-2"></i>
+        Thanh toán
+      </h3>
+      <div class="space-y-1 text-sm text-gray-600">
+        <p><span class="font-medium">Phương thức:</span> {{ order.payment }}</p>
+        {% if order.order_note %}
+        <p><span class="font-medium">Ghi chú:</span> {{ order.order_note }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Items -->
+  <div class="bg-white shadow rounded p-5">
+    <h3 class="font-bold text-gray-700 mb-4">
+      <i class="fa-solid fa-boxes-stacked text-primary mr-2"></i>
+      Sản phẩm đặt hàng
+    </h3>
+    {% if order_detail %}
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
+          <tr class="text-sm text-gray-500 uppercase">
+            <th class="w-16"></th>
+            <th>Sản phẩm</th>
+            <th class="text-center">Đơn giá</th>
+            <th class="text-center">Số lượng</th>
+            <th class="text-right">Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order_detail %}
+          <tr class="border-b border-gray-100 hover">
+            <td>
+              {% if item.product.product_image %}
+              <img src="{{ item.product.product_image.url }}"
+                   alt="{{ item.product.product_name }}"
+                   class="w-14 h-14 object-cover rounded" />
+              {% endif %}
+            </td>
+            <td>
+              <p class="font-medium text-gray-700">{{ item.product.product_name }}</p>
+              <p class="text-xs text-gray-400">SKU: {{ item.product.sku }}</p>
+            </td>
+            <td class="text-center text-gray-600">
+              {{ item.product_price|floatformat:0|intcomma }} ₫
+            </td>
+            <td class="text-center text-gray-600">{{ item.quantity }}</td>
+            <td class="text-right font-semibold text-primary">
+              {{ item.subtotal|floatformat:0|intcomma }} ₫
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-gray-400 text-center py-6">Không có sản phẩm.</p>
+    {% endif %}
+
+    <!-- Order Total -->
+    <div class="mt-4 flex justify-end">
+      <div class="bg-gray-50 rounded-lg p-4 w-full max-w-xs space-y-2">
+        <div class="flex justify-between text-sm text-gray-600">
+          <span>Tổng cộng</span>
+          <span class="font-bold text-lg text-primary">
+            {{ order.order_total|floatformat:0|intcomma }} ₫
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock Account_Content %}

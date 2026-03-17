@@ -1,15 +1,19 @@
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import urllib.parse
 import urllib.request
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count, F, Q, Sum
+from django.db.models.functions import TruncMonth
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from accounts.models import userAddressBook as AddressBook
 from saleproduct.models import ProductVariants
@@ -445,3 +449,71 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+@staff_member_required(login_url='login')
+def merchant_dashboard(request):
+    now = timezone.now()
+    thirty_days_ago = now - timedelta(days=30)
+
+    aggregates = Order.objects.aggregate(
+        total_orders=Count('id'),
+        total_revenue=Sum('order_total', filter=Q(status='Completed')),
+        pending_orders=Count('id', filter=Q(status='New')),
+        completed_orders=Count('id', filter=Q(status='Completed')),
+        cancelled_orders=Count('id', filter=Q(status='Cancelled')),
+        accepted_orders=Count('id', filter=Q(status='Accepted')),
+    )
+    total_orders = aggregates['total_orders'] or 0
+    total_revenue = aggregates['total_revenue'] or 0
+    pending_orders = aggregates['pending_orders'] or 0
+    completed_orders = aggregates['completed_orders'] or 0
+    cancelled_orders = aggregates['cancelled_orders'] or 0
+    accepted_orders = aggregates['accepted_orders'] or 0
+
+    recent_orders = Order.objects.select_related(
+        'user', 'receiver_address'
+    ).order_by('-created_at')[:10]
+
+    top_products = (
+        OrderProduct.objects.filter(order__status='Completed')
+        .values(
+            'product__product__name', 'product__sku'
+        )
+        .annotate(
+            total_qty=Sum('quantity'),
+            total_revenue=Sum(F('product_price') * F('quantity')),
+        )
+        .order_by('-total_qty')[:5]
+    )
+
+    monthly_data = (
+        Order.objects.filter(created_at__gte=thirty_days_ago, status='Completed')
+        .annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(orders=Count('id'), revenue=Sum('order_total'))
+        .order_by('month')
+    )
+
+    chart_labels = []
+    chart_orders = []
+    chart_revenue = []
+    for entry in monthly_data:
+        chart_labels.append(entry['month'].strftime('%b %Y') if entry['month'] else '')
+        chart_orders.append(entry['orders'])
+        chart_revenue.append(round(entry['revenue'] or 0, 2))
+
+    context = {
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'pending_orders': pending_orders,
+        'completed_orders': completed_orders,
+        'cancelled_orders': cancelled_orders,
+        'accepted_orders': accepted_orders,
+        'recent_orders': recent_orders,
+        'top_products': top_products,
+        'chart_labels': json.dumps(chart_labels),
+        'chart_orders': json.dumps(chart_orders),
+        'chart_revenue': json.dumps(chart_revenue),
+    }
+    return render(request, 'dashboard/merchant_dashboard.html', context)

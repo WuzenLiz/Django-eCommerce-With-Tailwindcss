@@ -43,6 +43,17 @@
             </a>
         </div>
 
+        {% if user.is_staff %}
+        <div class="space-y-1 pl-8 pt-4">
+            <a href="{% url 'merchant_dashboard' %}" class="relative hover:text-primary block font-medium capitalize transition text-primary">
+                <span class="absolute -left-8 top-0 text-base">
+                    <i class="fa-solid fa-chart-line"></i>
+                </span>
+                Sales Dashboard
+            </a>
+        </div>
+        {% endif %}
+
     </div>
 </div>
 <!-- ./sidebar -->
