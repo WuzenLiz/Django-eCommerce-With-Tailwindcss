@@ -1,2 +1,101 @@
 {% extends '../accounts/profile/Account_base.html' %}
+{% load static i18n humanize %}
+
 {% block title_suffix %}Lịch sử đơn hàng{% endblock title_suffix %}
+
+{% block Account_Content %}
+<div class="col-span-9">
+  <div class="bg-white shadow rounded p-4">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-gray-700">
+        <i class="fa-solid fa-box-archive text-primary mr-2"></i>
+        Lịch sử đơn hàng
+      </h2>
+      <!-- Status filter tabs -->
+      <div class="flex gap-2 flex-wrap">
+        <a href="{% url 'order' %}"
+           class="btn btn-sm {% if not request.GET.status %}btn-primary{% else %}btn-outline btn-primary{% endif %}">
+          Tất cả
+        </a>
+        <a href="?status=New"
+           class="btn btn-sm {% if request.GET.status == 'New' %}btn-warning{% else %}btn-outline btn-warning{% endif %}">
+          Mới
+        </a>
+        <a href="?status=Accepted"
+           class="btn btn-sm {% if request.GET.status == 'Accepted' %}btn-info{% else %}btn-outline btn-info{% endif %}">
+          Đã xác nhận
+        </a>
+        <a href="?status=Completed"
+           class="btn btn-sm {% if request.GET.status == 'Completed' %}btn-success{% else %}btn-outline btn-success{% endif %}">
+          Hoàn thành
+        </a>
+        <a href="?status=Cancelled"
+           class="btn btn-sm {% if request.GET.status == 'Cancelled' %}btn-error{% else %}btn-outline btn-error{% endif %}">
+          Đã hủy
+        </a>
+      </div>
+    </div>
+
+    {% if orders %}
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
+          <tr class="text-sm text-gray-500 uppercase">
+            <th>Mã đơn hàng</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Ngày đặt</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr class="hover border-b border-gray-100">
+            <td class="font-medium text-primary">#{{ order.id }}</td>
+            <td class="font-semibold text-gray-700">{{ order.order_total|floatformat:0|intcomma }} ₫</td>
+            <td>
+              {% if order.status == 'New' %}
+                <span class="badge badge-warning">Mới</span>
+              {% elif order.status == 'Accepted' %}
+                <span class="badge badge-info">Đã xác nhận</span>
+              {% elif order.status == 'Completed' %}
+                <span class="badge badge-success">Hoàn thành</span>
+              {% elif order.status == 'Cancelled' %}
+                <span class="badge badge-error">Đã hủy</span>
+              {% else %}
+                <span class="badge">{{ order.status }}</span>
+              {% endif %}
+            </td>
+            <td class="text-sm text-gray-500">{{ order.created_at|date:"d/m/Y H:i" }}</td>
+            <td class="flex items-center gap-2">
+              <a href="{% url 'order_detail' order.id %}"
+                 class="btn btn-xs btn-outline btn-primary">
+                <i class="fa-solid fa-eye"></i> Chi tiết
+              </a>
+              {% if order.status == 'New' %}
+              <form action="{% url 'order_cancel' order.id %}" method="POST"
+                    onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-xs btn-outline btn-error">
+                  <i class="fa-solid fa-xmark"></i> Hủy
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-16">
+      <i class="fa-solid fa-box-open text-gray-300 text-6xl mb-4"></i>
+      <p class="text-gray-500 text-lg">Bạn chưa có đơn hàng nào.</p>
+      <a href="{% url 'shop' %}" class="btn btn-primary mt-4">
+        <i class="fa-solid fa-shop mr-1"></i> Mua sắm ngay
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock Account_Content %}
