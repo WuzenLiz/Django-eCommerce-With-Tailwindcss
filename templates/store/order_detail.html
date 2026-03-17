@@ -109,8 +109,7 @@
             </td>
             <td class="text-center text-gray-600">{{ item.quantity }}</td>
             <td class="text-right font-semibold text-primary">
-              {% widthratio item.product_price 1 item.quantity as subtotal %}
-              {{ subtotal|floatformat:0|intcomma }} ₫
+              {{ item.subtotal|floatformat:0|intcomma }} ₫
             </td>
           </tr>
           {% endfor %}

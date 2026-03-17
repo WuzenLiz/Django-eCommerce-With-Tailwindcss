@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, F, Sum
+from django.db.models import Count, F, Q, Sum
 from django.db.models.functions import TruncMonth
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -456,29 +456,39 @@ def merchant_dashboard(request):
     now = timezone.now()
     thirty_days_ago = now - timedelta(days=30)
 
-    total_orders = Order.objects.count()
-    total_revenue = Order.objects.filter(status='Completed').aggregate(
-        revenue=Sum('order_total')
-    )['revenue'] or 0
-    pending_orders = Order.objects.filter(status='New').count()
-    completed_orders = Order.objects.filter(status='Completed').count()
-    cancelled_orders = Order.objects.filter(status='Cancelled').count()
-    accepted_orders = Order.objects.filter(status='Accepted').count()
+    aggregates = Order.objects.aggregate(
+        total_orders=Count('id'),
+        total_revenue=Sum('order_total', filter=Q(status='Completed')),
+        pending_orders=Count('id', filter=Q(status='New')),
+        completed_orders=Count('id', filter=Q(status='Completed')),
+        cancelled_orders=Count('id', filter=Q(status='Cancelled')),
+        accepted_orders=Count('id', filter=Q(status='Accepted')),
+    )
+    total_orders = aggregates['total_orders'] or 0
+    total_revenue = aggregates['total_revenue'] or 0
+    pending_orders = aggregates['pending_orders'] or 0
+    completed_orders = aggregates['completed_orders'] or 0
+    cancelled_orders = aggregates['cancelled_orders'] or 0
+    accepted_orders = aggregates['accepted_orders'] or 0
 
     recent_orders = Order.objects.select_related(
         'user', 'receiver_address'
     ).order_by('-created_at')[:10]
 
     top_products = (
-        OrderProduct.objects.values(
+        OrderProduct.objects.filter(order__status='Completed')
+        .values(
             'product__product__name', 'product__sku'
         )
-        .annotate(total_qty=Sum('quantity'), total_revenue=Sum(F('product_price') * F('quantity')))
+        .annotate(
+            total_qty=Sum('quantity'),
+            total_revenue=Sum(F('product_price') * F('quantity')),
+        )
         .order_by('-total_qty')[:5]
     )
 
     monthly_data = (
-        Order.objects.filter(created_at__gte=thirty_days_ago)
+        Order.objects.filter(created_at__gte=thirty_days_ago, status='Completed')
         .annotate(month=TruncMonth('created_at'))
         .values('month')
         .annotate(orders=Count('id'), revenue=Sum('order_total'))

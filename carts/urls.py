@@ -19,8 +19,8 @@ urlpatterns = [
     path('checkout', views.checkout, name='checkout'),
     path('create_order', views.order_create, name='order_create'),
     path('order', views.order_history, name='order'),
-    path('order/<int:order_id>/', views.order_detail, name='order_detail'),
-    path('order/<int:order_id>/cancel/', views.order_cancel, name='order_cancel'),
+    path('order/<int:order_id>', views.order_detail, name='order_detail'),
+    path('order/<int:order_id>/cancel', views.order_cancel, name='order_cancel'),
     path('dashboard/', views.merchant_dashboard, name='merchant_dashboard'),
 
     #VNPAY 

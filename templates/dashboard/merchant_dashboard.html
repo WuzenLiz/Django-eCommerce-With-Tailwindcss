@@ -180,7 +180,11 @@
             {% for order in recent_orders %}
             <tr class="hover">
               <td class="font-medium text-primary">
-                <a href="{% url 'order_detail' order.id %}">#{{ order.id }}</a>
+                {% if request.user == order.user %}
+                  <a href="{% url 'order_detail' order.id %}">#{{ order.id }}</a>
+                {% else %}
+                  #{{ order.id }}
+                {% endif %}
               </td>
               <td class="text-sm text-gray-600">{{ order.user.email }}</td>
               <td class="text-sm font-semibold">{{ order.order_total|floatformat:0|intcomma }} ₫</td>
