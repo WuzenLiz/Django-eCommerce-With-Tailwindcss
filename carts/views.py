@@ -1,10 +1,14 @@
 import json
+import logging
+from datetime import datetime
+import urllib.parse
+import urllib.request
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.models import userAddressBook as AddressBook
@@ -15,6 +19,8 @@ from .models import Cart, CartItem, Order, OrderItem, Payment_method, PayOrder, 
 from .vnpay import vnpay
 
 from django.db import transaction
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -66,26 +72,31 @@ def add_cart(request): # AJAX
         }
         return HttpResponse(json.dumps(context), content_type='application/json')
 
-def cart(request,cart_items=None):
+def cart(request, cart_items=None):
     try:
         tax = 0
         grand_total = 0
-        total=0
-        quantity=0
+        total = 0
+        quantity = 0
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(
-                cart=Cart.objects.get(cart_id=_cart_id(request)), user=request.user, is_active=True)
+                cart=Cart.objects.get(cart_id=_cart_id(request)),
+                user=request.user,
+                is_active=True,
+            ).select_related('product', 'product__product')
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
-            cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+            cart_items = CartItem.objects.filter(
+                cart=cart, is_active=True
+            ).select_related('product', 'product__product')
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
-            tax = (2 * total) / 100
-            grand_total = total + tax
+        tax = (2 * total) / 100
+        grand_total = total + tax
         total_item = cart_items.count()
     except ObjectDoesNotExist:
-        pass
+        total_item = 0
     context = {
         'total': total,
         'quantity': quantity,
@@ -112,7 +123,7 @@ def remove_cart(request, product_id, cart_item_id):
             cart_item.save()
         else:
             cart_item.delete()
-    except Exception:
+    except (Cart.DoesNotExist, CartItem.DoesNotExist, ObjectDoesNotExist):
         pass
     return redirect('cart')
 
@@ -128,7 +139,7 @@ def remove_cart_item(request, product_id, cart_item_id):
             cart_item = CartItem.objects.get(
                 product=product, cart=cart, id=cart_item_id)
         cart_item.delete()
-    except Exception:
+    except (Cart.DoesNotExist, CartItem.DoesNotExist, ObjectDoesNotExist):
         pass
     return redirect('cart')
 
@@ -160,27 +171,27 @@ def update_cart(request):
 
 @login_required(login_url='login', redirect_field_name='next')
 def checkout(request):
+    # Initialize defaults so context can always be safely constructed
+    tax = 0
+    total = 0
+    grand_total = 0
+    quantity = 0
+    cart_items = CartItem.objects.none()
+    address = AddressBook.objects.none()
     try:
-        tax = 0
-        total = 0
-        grand_total = 0
-        quantity = 0
         cart = Cart.objects.get(cart_id=_cart_id(request))
         cart_items = CartItem.objects.filter(
-            user=request.user,cart=cart , is_active=True)
+            user=request.user, cart=cart, is_active=True
+        ).select_related('product', 'product__product')
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
         tax = (2 * total) / 100
         grand_total = total + tax
-        if request.user.is_authenticated:
-            try:
-                address = AddressBook.objects.filter(
-                    user=request.user).all()
-            except AddressBook.DoesNotExist:
-                address = None
+        address = AddressBook.objects.filter(user=request.user)
     except ObjectDoesNotExist:
-        pass
+        # If cart or related objects do not exist, fall back to initialized defaults
+        logger.debug("Checkout requested with no existing cart for session %s", _cart_id(request))
     context = {
         'cart_id': _cart_id(request),
         'total': total,
@@ -215,7 +226,7 @@ def order_create(request):
                 order_total=cart.grand_total,
                 status='Order Received',
             )
-            cart_items = CartItem.objects.filter(cart=cart)
+            cart_items = CartItem.objects.filter(cart=cart).select_related('product', 'product__product')
             for item in cart_items:
                 OrderProduct.objects.create(
                     order=order,
@@ -233,8 +244,11 @@ def order_create(request):
 
 def order_history(request):
     if request.user.is_authenticated:
-        orders = Order.objects.filter(
-            user=request.user,status=request.GET.get('status',None)).order_by('-created_at')
+        status = request.GET.get('status')
+        orders = Order.objects.filter(user=request.user)
+        if status:
+            orders = orders.filter(status=status)
+        orders = orders.order_by('-created_at').select_related('receiver_address')
         context = {
             'orders': orders,
         }
@@ -244,8 +258,10 @@ def order_history(request):
 
 def order_detail(request, order_id):
     if request.user.is_authenticated:
-        order_detail = OrderProduct.objects.filter(order_id=order_id)
-        order = Order.objects.get(id=order_id)
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+        order_detail = OrderProduct.objects.filter(
+            order=order
+        ).select_related('product', 'product__product')
         context = {
             'order_detail': order_detail,
             'order': order,
@@ -255,19 +271,16 @@ def order_detail(request, order_id):
         return redirect('login')
 
 def order_cancel(request, order_id):
-    if request.get.method == 'POST':
-      if request.user.is_authenticated:
-          order = Order.objects.get(id=order_id)
-          order.status = 'Cancelled'
-          order.save()
-          return redirect('order_history')
-      else:
-          return redirect('login')
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            order = get_object_or_404(Order, id=order_id, user=request.user)
+            order.status = 'Cancelled'
+            order.save()
+            return redirect('order')
+        else:
+            return redirect('login')
     else:
-      context={
-        'status': 'Cancelled'
-      }
-      return redirect('order_history', context)
+        return redirect('order')
 
 # VNPay Payment
 def payment(request):
@@ -308,7 +321,7 @@ def payment(request):
             vnpay_payment_url = vnp.get_payment_url(settings.VNPAY_PAYMENT_URL, settings.VNPAY_HASH_SECRET_KEY)
             return redirect(vnpay_payment_url)
         else:
-            print("Form input not validate")
+            logger.warning("VNPay payment form invalid: %s", form.errors)
     else:
         return render(request, "vnpay/payment.html", {"title": "Thanh toán"})
 
@@ -334,9 +347,9 @@ def payment_ipn(request):
             if totalamount:
                 if firstTimeUpdate:
                     if vnp_ResponseCode == '00':
-                        print('Payment Success. Your code implement here')
+                        logger.info('VNPay payment success for order %s', order_id)
                     else:
-                        print('Payment Error. Your code implement here')
+                        logger.warning('VNPay payment error for order %s, response code: %s', order_id, vnp_ResponseCode)
 
                     # Return VNPAY: Merchant update success
                     result = JsonResponse({'RspCode': '00', 'Message': 'Confirm Success'})
@@ -409,15 +422,15 @@ def query(request):
         vnp.requestData['vnp_IpAddr'] = get_client_ip(request)
         requestUrl = vnp.get_payment_url(settings.VNPAY_API_URL, settings.VNPAY_HASH_SECRET_KEY)
         responseData = urllib.request.urlopen(requestUrl).read().decode()
-        print('RequestURL:' + requestUrl)
-        print('VNPAY Response:' + responseData)
+        logger.debug('VNPay Query RequestURL: %s', requestUrl)
+        logger.debug('VNPay Query Response: %s', responseData)
         data = responseData.split('&')
         for x in data:
             tmp = x.split('=')
             if len(tmp) == 2:
                 vnp.responseData[tmp[0]] = urllib.parse.unquote(tmp[1]).replace('+', ' ')
 
-        print('Validate data from VNPAY:' + str(vnp.validate_response(settings.VNPAY_HASH_SECRET_KEY)))
+        logger.debug('VNPay validate response: %s', vnp.validate_response(settings.VNPAY_HASH_SECRET_KEY))
         return render(request, "vnpay/query.html", {"title": "Kiểm tra kết quả giao dịch", "data": vnp.responseData})
 
 

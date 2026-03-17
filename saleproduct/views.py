@@ -26,17 +26,17 @@ def index(request):
         is_active=True).order_by('?').first()
     Brands = Brand.objects.filter(is_active=True, is_featured=True)[:6]
     Categories = Category.objects.filter(is_active=True)[:6]
-    # get 4 new products lowest price variant
+    # get 4 new products with their variants prefetched
     NewProducts = Product.objects.filter(
-        is_active=True).order_by('-created_at')[:4]
+        is_active=True).order_by('-created_at').prefetch_related('variants').select_related('brand', 'category')[:4]
     BestSellerProducts = Product.objects.filter(
-        is_active=True).order_by('?')[:4]
+        is_active=True).order_by('?').prefetch_related('variants').select_related('brand', 'category')[:4]
     context = {
         'BannerContent': BannerContent,
         'Brands': Brands,
-     'Categories': Categories,
-     'NewProducts': NewProducts,
-     'BestSellerProducts': BestSellerProducts,
+        'Categories': Categories,
+        'NewProducts': NewProducts,
+        'BestSellerProducts': BestSellerProducts,
     }
     return render(request, 'saleproduct/index.html', context)
 
@@ -57,7 +57,9 @@ def search(request):
     """Search page."""
     search_query = request.GET.get('search')
     context = {
-        'Products': Product.objects.filter(is_active=True, name__icontains=search_query),
+        'Products': Product.objects.filter(
+            is_active=True, name__icontains=search_query
+        ).prefetch_related('variants').select_related('brand', 'category'),
         'search_query': search_query,
     }
     return render(request, 'saleproduct/shop.html', context)
@@ -71,16 +73,23 @@ class ProductDetailView(HitCountDetailView):
     template_name = 'saleproduct/product.html'
     context_object_name = 'product'
 
+    def get_queryset(self):
+        return Product.objects.prefetch_related('variants', 'images').select_related('brand', 'category')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['Products'] = Product.objects.get(slug=self.kwargs['slug'])
-        context['RelatedProducts'] = Product.objects.filter(is_active=True).order_by('?')[:4]
+        context['Products'] = self.object
+        context['RelatedProducts'] = Product.objects.filter(
+            is_active=True, category=self.object.category
+        ).exclude(pk=self.object.pk).prefetch_related('variants').select_related('brand', 'category').order_by('?')[:4]
         return context
 
 def category(request, slug,):
     """Category detail page."""
     context = {
-        'Products': Product.objects.filter(category__slug=slug),
+        'Products': Product.objects.filter(
+            category__slug=slug
+        ).prefetch_related('variants').select_related('brand', 'category'),
     }
     return render(request, 'saleproduct/shop.html', context)
 
@@ -88,7 +97,9 @@ def category(request, slug,):
 def brand(request, slug):
     """Brand detail page."""
     context = {
-        'Products': Product.objects.filter(brand__slug=slug),
+        'Products': Product.objects.filter(
+            brand__slug=slug
+        ).prefetch_related('variants').select_related('brand', 'category'),
     }
     return render(request, 'saleproduct/shop.html', context)
 
@@ -107,7 +118,7 @@ def shop(request):
             # get sale products
             products = Product.objects.filter(is_active=True).order_by('variants__sale_price')
 
-    if request.GET.get('category'): # filter by category slug in url query="slug1+slug2+..."
+    if request.GET.get('category'):  # filter by category slug in url query="slug1+slug2+..."
         slugs = request.GET.get('category').split(' ')
         products = products.filter(category__slug__in=slugs)
     if request.GET.get('brand'):
@@ -116,15 +127,17 @@ def shop(request):
     if request.GET.get('price'):
         prices = request.GET.get('price').split('-')
         products = products.filter(variants__price__gte=prices[0], variants__price__lte=prices[1])
+
+    products = products.prefetch_related('variants').select_related('brand', 'category').distinct()
     # Pagination
-    paginator = Paginator(products.distinct(), settings.PAGINATE_BY)
+    paginator = Paginator(products, settings.PAGINATE_BY)
 
     context = {
         'Products': paginator.get_page(request.GET.get('page')),
-        'filter':{
+        'filter': {
             'category': request.GET.get('category'),
             'brand': request.GET.get('brand'),
-        } 
+        }
     }
     return render(request, 'saleproduct/shop.html', context)
 # API views
